@@ -46,6 +46,10 @@
         }
 
 
+        /* =====================================
+           HEADER
+        ===================================== */
+
         .header {
 
             background: #1d4ed8;
@@ -79,6 +83,10 @@
         }
 
 
+        /* =====================================
+           CARD
+        ===================================== */
+
         .card {
 
             background: white;
@@ -87,7 +95,8 @@
 
             border-radius: 0 0 18px 18px;
 
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.08);
 
         }
 
@@ -112,6 +121,92 @@
         }
 
 
+        /* =====================================
+           APPLICANT TYPE
+        ===================================== */
+
+        .applicant-options {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .applicant-option {
+
+            position: relative;
+
+        }
+
+
+        .applicant-option input {
+
+            position: absolute;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+        }
+
+
+        .applicant-option label {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 17px;
+
+            border: 2px solid #d1d5db;
+
+            border-radius: 12px;
+
+            background: #ffffff;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            text-align: center;
+
+            color: #374151;
+
+            transition: 0.2s;
+
+        }
+
+
+        .applicant-option input:checked + label {
+
+            border-color: #2563eb;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+        }
+
+
+        .applicant-option label:hover {
+
+            border-color: #2563eb;
+
+        }
+
+
+        /* =====================================
+           INPUTS
+        ===================================== */
+
         .input-group {
 
             margin-bottom: 16px;
@@ -134,7 +229,7 @@
         }
 
 
-        input {
+        input[type="number"] {
 
             width: 100%;
 
@@ -153,7 +248,7 @@
         }
 
 
-        input:focus {
+        input[type="number"]:focus {
 
             border-color: #2563eb;
 
@@ -171,8 +266,14 @@
 
             margin-top: 5px;
 
+            line-height: 1.4;
+
         }
 
+
+        /* =====================================
+           BUTTONS
+        ===================================== */
 
         .buttons {
 
@@ -206,7 +307,7 @@
         }
 
 
-        .calculate-btn {
+        .primary-btn {
 
             background: #2563eb;
 
@@ -215,7 +316,7 @@
         }
 
 
-        .calculate-btn:hover {
+        .primary-btn:hover {
 
             background: #1d4ed8;
 
@@ -238,6 +339,10 @@
         }
 
 
+        /* =====================================
+           ERROR
+        ===================================== */
+
         .error {
 
             display: none;
@@ -258,6 +363,28 @@
 
         }
 
+
+        /* =====================================
+           SCREENS
+        ===================================== */
+
+        .screen {
+
+            display: none;
+
+        }
+
+
+        .screen.active {
+
+            display: block;
+
+        }
+
+
+        /* =====================================
+           RESULTS
+        ===================================== */
 
         .results {
 
@@ -342,6 +469,62 @@
         }
 
 
+        /* =====================================
+           BUSINESS PRE-CHECK
+        ===================================== */
+
+        .business-check {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+        }
+
+
+        .business-check.not-eligible {
+
+            display: block;
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+            border: 1px solid #fecaca;
+
+        }
+
+
+        .business-check .title {
+
+            font-size: 19px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .business-check .message {
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =====================================
+           ELIGIBILITY
+        ===================================== */
+
         .eligibility {
 
             margin-top: 20px;
@@ -389,8 +572,39 @@
 
             margin-top: 7px;
 
+            line-height: 1.4;
+
         }
 
+
+        /* =====================================
+           BACK BUTTON
+        ===================================== */
+
+        .back-button {
+
+            background: transparent;
+
+            border: none;
+
+            color: #2563eb;
+
+            padding: 0;
+
+            margin-bottom: 18px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        /* =====================================
+           FOOTER
+        ===================================== */
 
         .footer {
 
@@ -404,6 +618,10 @@
 
         }
 
+
+        /* =====================================
+           MOBILE
+        ===================================== */
 
         @media (max-width: 400px) {
 
@@ -461,14 +679,18 @@
 <div class="container">
 
 
-    <!-- HEADER -->
+    <!-- =====================================
+         HEADER
+    ====================================== -->
 
     <div class="header">
 
-        <h1>Car Loan Eligibility Calculator</h1>
+        <h1>
+            Car Loan Eligibility Calculator
+        </h1>
 
         <p>
-            Assess eligibility based on salary & existing EMIs
+            Assess customer eligibility
         </p>
 
     </div>
@@ -478,7 +700,9 @@
     <div class="card">
 
 
-        <!-- ERROR MESSAGE -->
+        <!-- =====================================
+             ERROR MESSAGE
+        ====================================== -->
 
         <div
             class="error"
@@ -487,365 +711,153 @@
 
 
 
-        <!-- SALARY DETAILS -->
-
-        <div class="section">
-
-            <div class="section-title">
-                Salary Details
-            </div>
-
-
-            <!-- Gross Salary -->
-
-            <div class="input-group">
-
-                <label for="grossSalary">
-                    1. Gross Salary (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="grossSalary"
-                    min="0"
-                    step="100"
-                    placeholder="Enter gross salary">
-
-            </div>
-
-
-
-            <!-- Salary Sheet Deduction -->
-
-            <div class="input-group">
-
-                <label for="salaryDeduction">
-                    2. Deductions as per Salary Sheet (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="salaryDeduction"
-                    min="0"
-                    step="100"
-                    placeholder="Enter salary deductions">
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CIC EMI DETAILS -->
-
-        <div class="section">
-
-            <div class="section-title">
-                Existing EMI Details as per CIC Report
-            </div>
-
-
-            <!-- EMI 1 -->
-
-            <div class="input-group">
-
-                <label for="emi1">
-                    EMI Deduction 1 (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="emi1"
-                    min="0"
-                    step="100"
-                    value="0"
-                    placeholder="Enter EMI amount">
-
-            </div>
-
-
-            <!-- EMI 2 -->
-
-            <div class="input-group">
-
-                <label for="emi2">
-                    EMI Deduction 2 (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="emi2"
-                    min="0"
-                    step="100"
-                    value="0"
-                    placeholder="Enter EMI amount">
-
-            </div>
-
-
-            <!-- EMI 3 -->
-
-            <div class="input-group">
-
-                <label for="emi3">
-                    EMI Deduction 3 (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="emi3"
-                    min="0"
-                    step="100"
-                    value="0"
-                    placeholder="Enter EMI amount">
-
-            </div>
-
-
-            <!-- EMI 4 -->
-
-            <div class="input-group">
-
-                <label for="emi4">
-                    EMI Deduction 4 (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="emi4"
-                    min="0"
-                    step="100"
-                    value="0"
-                    placeholder="Enter EMI amount">
-
-            </div>
-
-
-            <!-- EMI 5 -->
-
-            <div class="input-group">
-
-                <label for="emi5">
-                    EMI Deduction 5 (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="emi5"
-                    min="0"
-                    step="100"
-                    value="0"
-                    placeholder="Enter EMI amount">
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CAR LOAN DETAILS -->
-
-        <div class="section">
-
-            <div class="section-title">
-                Proposed Car Loan Details
-            </div>
-
-
-            <!-- Car Loan Amount -->
-
-            <div class="input-group">
-
-                <label for="loanAmount">
-                    Car Loan Amount (₹)
-                </label>
-
-                <input
-                    type="number"
-                    id="loanAmount"
-                    min="0"
-                    step="1000"
-                    placeholder="Enter car loan amount">
-
-            </div>
-
-
-            <!-- Interest Rate -->
-
-            <div class="input-group">
-
-                <label for="interestRate">
-                    Car Loan Interest Rate per Annum (%)
-                </label>
-
-                <input
-                    type="number"
-                    id="interestRate"
-                    min="0"
-                    step="0.01"
-                    placeholder="Enter annual interest rate">
-
-            </div>
-
-
-            <!-- Loan Tenure IN MONTHS -->
-
-            <div class="input-group">
-
-                <label for="loanTenure">
-                    Loan Tenure (Months)
-                </label>
-
-                <input
-                    type="number"
-                    id="loanTenure"
-                    min="1"
-                    step="1"
-                    placeholder="Enter loan tenure in months">
-
-                <div class="hint">
-                    EMI is calculated using the reducing-balance method.
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- BUTTONS -->
-
-        <div class="buttons">
-
-            <button
-                type="button"
-                class="calculate-btn"
-                onclick="calculateEligibility()">
-
-                Calculate
-
-            </button>
-
-
-            <button
-                type="button"
-                class="reset-btn"
-                onclick="resetCalculator()">
-
-                Reset
-
-            </button>
-
-        </div>
-
-
-
-        <!-- RESULTS -->
+        <!-- =====================================
+             SCREEN 1
+             SELECT APPLICANT TYPE
+        ====================================== -->
 
         <div
-            class="results"
-            id="results">
+            class="screen active"
+            id="applicantScreen">
 
 
-            <div class="section-title">
-                Calculation Result
-            </div>
+            <div class="section">
 
+                <div class="section-title">
 
-
-            <!-- NEW CAR LOAN EMI -->
-
-            <div class="result-row highlight">
-
-                <div class="result-label">
-                    New Car Loan EMI
-                </div>
-
-                <div
-                    class="result-value"
-                    id="newLoanEmi">
-
-                    ₹0.00
+                    Select Applicant Type
 
                 </div>
 
-            </div>
+
+                <div class="applicant-options">
+
+
+                    <!-- SALARIED -->
+
+                    <div class="applicant-option">
+
+                        <input
+                            type="radio"
+                            id="salaried"
+                            name="applicantType"
+                            value="salaried">
+
+                        <label for="salaried">
+
+                            Salaried Individual
+
+                        </label>
+
+                    </div>
 
 
 
-            <!-- TOTAL EXISTING EMI -->
+                    <!-- BUSINESS -->
 
-            <div class="result-row">
+                    <div class="applicant-option">
 
-                <div class="result-label">
-                    Total Existing CIC EMIs
+                        <input
+                            type="radio"
+                            id="business"
+                            name="applicantType"
+                            value="business">
+
+                        <label for="business">
+
+                            Business Man
+
+                        </label>
+
+                    </div>
+
+
                 </div>
 
-                <div
-                    class="result-value"
-                    id="totalExistingEmi">
 
-                    ₹0.00
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="proceedApplicantType()">
 
-                </div>
+                    Proceed
 
-            </div>
-
-
-
-            <!-- IN-HAND SALARY -->
-
-            <div class="result-row highlight">
-
-                <div class="result-label">
-                    Calculated In-Hand Salary
-                </div>
-
-                <div
-                    class="result-value"
-                    id="inHandSalary">
-
-                    ₹0.00
-
-                </div>
-
-            </div>
-
-
-
-            <!-- 40% OF GROSS -->
-
-            <div class="result-row highlight">
-
-                <div class="result-label">
-                    40% of Gross Salary
-                </div>
-
-                <div
-                    class="result-value"
-                    id="fortyPercentSalary">
-
-                    ₹0.00
-
-                </div>
+                </button>
 
             </div>
 
 
+        </div>
 
-            <!-- DIFFERENCE -->
 
-            <div class="result-row">
 
-                <div class="result-label">
-                    Difference
+        <!-- =====================================
+             SCREEN 2
+             SALARIED INPUTS
+        ====================================== -->
+
+        <div
+            class="screen"
+            id="salariedScreen">
+
+
+            <button
+                type="button"
+                class="back-button"
+                onclick="goBackToApplicantSelection()">
+
+                ← Change Applicant Type
+
+            </button>
+
+
+
+            <!-- SALARY DETAILS -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    Salary Details
                 </div>
 
-                <div
-                    class="result-value"
-                    id="difference">
 
-                    ₹0.00
+                <!-- GROSS SALARY -->
+
+                <div class="input-group">
+
+                    <label for="grossSalary">
+
+                        1. Gross Salary (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="grossSalary"
+                        min="0"
+                        step="100"
+                        placeholder="Enter gross salary">
+
+                </div>
+
+
+
+                <!-- SALARY DEDUCTION -->
+
+                <div class="input-group">
+
+                    <label for="salaryDeduction">
+
+                        2. Deductions as per Salary Sheet (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="salaryDeduction"
+                        min="0"
+                        step="100"
+                        placeholder="Enter salary deductions">
 
                 </div>
 
@@ -853,21 +865,844 @@
 
 
 
-            <!-- ELIGIBILITY -->
+            <!-- CIC EMI -->
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Existing EMI Details as per CIC Report
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sEmi1">
+                        EMI Deduction 1 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sEmi1"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sEmi2">
+                        EMI Deduction 2 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sEmi2"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sEmi3">
+                        EMI Deduction 3 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sEmi3"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sEmi4">
+                        EMI Deduction 4 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sEmi4"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sEmi5">
+                        EMI Deduction 5 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sEmi5"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CAR LOAN -->
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Proposed Car Loan Details
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sLoanAmount">
+
+                        Car Loan Amount (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sLoanAmount"
+                        min="0"
+                        step="1000"
+                        placeholder="Enter car loan amount">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sInterestRate">
+
+                        Car Loan Interest Rate per Annum (%)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sInterestRate"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter annual interest rate">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="sLoanTenure">
+
+                        Loan Tenure (Months)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="sLoanTenure"
+                        min="1"
+                        step="1"
+                        placeholder="Enter loan tenure in months">
+
+                    <div class="hint">
+
+                        EMI is calculated using the
+                        reducing-balance method.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="calculateSalaried()">
+
+                    Calculate
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetCalculator()">
+
+                    Reset
+
+                </button>
+
+            </div>
+
+
+            <!-- SALARIED RESULTS -->
 
             <div
-                class="eligibility"
-                id="eligibility">
+                class="results"
+                id="salariedResults">
 
-                Eligibility Result
+                <div class="section-title">
+                    Calculation Result
+                </div>
+
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+                        New Car Loan EMI
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="sNewLoanEmi">
+                        ₹0.00
+                    </div>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <div class="result-label">
+                        Total Existing CIC EMIs
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="sTotalExistingEmi">
+                        ₹0.00
+                    </div>
+
+                </div>
+
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+                        Calculated In-Hand Salary
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="sInHandSalary">
+                        ₹0.00
+                    </div>
+
+                </div>
+
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+                        40% of Gross Salary
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="sFortyPercent">
+                        ₹0.00
+                    </div>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <div class="result-label">
+                        Difference
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="sDifference">
+                        ₹0.00
+                    </div>
+
+                </div>
+
 
                 <div
-                    class="difference"
-                    id="eligibilityMessage">
+                    class="eligibility"
+                    id="sEligibility">
+
                 </div>
 
             </div>
 
+        </div>
+
+
+
+        <!-- =====================================
+             SCREEN 3
+             BUSINESS INCOME
+        ====================================== -->
+
+        <div
+            class="screen"
+            id="businessIncomeScreen">
+
+
+            <button
+                type="button"
+                class="back-button"
+                onclick="goBackToApplicantSelection()">
+
+                ← Change Applicant Type
+
+            </button>
+
+
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Business Income Details
+
+                </div>
+
+
+                <!-- FY 2024-25 -->
+
+                <div class="input-group">
+
+                    <label for="fy202425">
+
+                        Income for FY 2024-25 (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="fy202425"
+                        min="0"
+                        step="1000"
+                        placeholder="Enter income for FY 2024-25">
+
+                </div>
+
+
+
+                <!-- FY 2025-26 -->
+
+                <div class="input-group">
+
+                    <label for="fy202526">
+
+                        Income for FY 2025-26 (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="fy202526"
+                        min="0"
+                        step="1000"
+                        placeholder="Enter income for FY 2025-26">
+
+                </div>
+
+
+                <div class="hint">
+
+                    Average annual income will be calculated
+                    from both financial years.
+
+                    The minimum required average annual
+                    income is ₹3,00,000.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NEXT BUTTON -->
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="calculateBusinessIncome()">
+
+                    Next
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetCalculator()">
+
+                    Reset
+
+                </button>
+
+            </div>
+
+
+
+            <!-- BUSINESS PRE-CHECK RESULT -->
+
+            <div
+                class="business-check"
+                id="businessNotEligible">
+
+                <div class="title">
+
+                    ✕ NOT ELIGIBLE
+
+                </div>
+
+                <div class="message">
+
+                    Average annual income is below
+                    ₹3,00,000.
+
+                    Customer is not eligible for the
+                    car loan under this criterion.
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             SCREEN 4
+             BUSINESS CAR LOAN ASSESSMENT
+        ====================================== -->
+
+        <div
+            class="screen"
+            id="businessLoanScreen">
+
+
+            <button
+                type="button"
+                class="back-button"
+                onclick="goBackToBusinessIncome()">
+
+                ← Back to Income Details
+
+            </button>
+
+
+
+            <!-- BUSINESS INCOME RESULT -->
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Business Income Assessment
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <div class="result-label">
+
+                        Average Annual Income
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bAverageAnnual">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+
+                        Monthly Income
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bMonthlyIncome">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CIC EMI -->
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Existing EMI Details as per CIC Report
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bEmi1">
+                        EMI Deduction 1 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bEmi1"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bEmi2">
+                        EMI Deduction 2 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bEmi2"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bEmi3">
+                        EMI Deduction 3 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bEmi3"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bEmi4">
+                        EMI Deduction 4 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bEmi4"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bEmi5">
+                        EMI Deduction 5 (₹)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bEmi5"
+                        min="0"
+                        step="100"
+                        value="0">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CAR LOAN -->
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Proposed Car Loan Details
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bLoanAmount">
+
+                        Car Loan Amount (₹)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bLoanAmount"
+                        min="0"
+                        step="1000"
+                        placeholder="Enter car loan amount">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bInterestRate">
+
+                        Car Loan Interest Rate per Annum (%)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bInterestRate"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter annual interest rate">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="bLoanTenure">
+
+                        Loan Tenure (Months)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="bLoanTenure"
+                        min="1"
+                        step="1"
+                        placeholder="Enter loan tenure in months">
+
+                    <div class="hint">
+
+                        EMI is calculated using the
+                        reducing-balance method.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="calculateBusinessLoan()">
+
+                    Calculate
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetCalculator()">
+
+                    Reset
+
+                </button>
+
+            </div>
+
+
+
+            <!-- BUSINESS RESULTS -->
+
+            <div
+                class="results"
+                id="businessResults">
+
+
+                <div class="section-title">
+
+                    Calculation Result
+
+                </div>
+
+
+
+                <!-- NEW CAR EMI -->
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+
+                        New Car Loan EMI
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bNewLoanEmi">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- EXISTING EMI -->
+
+                <div class="result-row">
+
+                    <div class="result-label">
+
+                        Total Existing CIC EMIs
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bTotalExistingEmi">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- IN-HAND -->
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+
+                        Calculated In-Hand Income
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bInHandIncome">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 40% -->
+
+                <div class="result-row highlight">
+
+                    <div class="result-label">
+
+                        40% of Monthly Income
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bFortyPercent">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DIFFERENCE -->
+
+                <div class="result-row">
+
+                    <div class="result-label">
+
+                        Difference
+
+                    </div>
+
+                    <div
+                        class="result-value"
+                        id="bDifference">
+
+                        ₹0.00
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ELIGIBILITY -->
+
+                <div
+                    class="eligibility"
+                    id="bEligibility">
+
+                </div>
+
+
+            </div>
 
         </div>
 
@@ -890,16 +1725,16 @@
 
 
 /* ==========================================
-   FORMAT INDIAN CURRENCY
+   FORMAT CURRENCY
 ========================================== */
 
 function formatCurrency(amount) {
 
     return new Intl.NumberFormat(
-        'en-IN',
+        "en-IN",
         {
-            style: 'currency',
-            currency: 'INR',
+            style: "currency",
+            currency: "INR",
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }
@@ -910,7 +1745,7 @@ function formatCurrency(amount) {
 
 
 /* ==========================================
-   GET NUMBER FROM INPUT
+   GET NUMBER
 ========================================== */
 
 function getNumber(id) {
@@ -927,33 +1762,154 @@ function getNumber(id) {
 
 
 /* ==========================================
-   CALCULATE ELIGIBILITY
+   SHOW ERROR
 ========================================== */
 
-function calculateEligibility() {
+function showError(message) {
 
-
-    const errorMessage =
+    const error =
         document.getElementById("errorMessage");
 
+    error.textContent =
+        message;
 
-    const results =
-        document.getElementById("results");
+    error.style.display =
+        "block";
 
-
-    /* ----------------------------------------
-       CLEAR OLD ERROR
-    ---------------------------------------- */
-
-    errorMessage.style.display = "none";
-
-    errorMessage.textContent = "";
+}
 
 
 
-    /* ----------------------------------------
-       GET INPUT VALUES
-    ---------------------------------------- */
+/* ==========================================
+   HIDE ERROR
+========================================== */
+
+function hideError() {
+
+    const error =
+        document.getElementById("errorMessage");
+
+    error.textContent =
+        "";
+
+    error.style.display =
+        "none";
+
+}
+
+
+
+/* ==========================================
+   PROCEED FROM APPLICANT TYPE
+========================================== */
+
+function proceedApplicantType() {
+
+    hideError();
+
+
+    const selected =
+        document.querySelector(
+            'input[name="applicantType"]:checked'
+        );
+
+
+    if (!selected) {
+
+        showError(
+            "Please select Salaried Individual or Business Man."
+        );
+
+        return;
+
+    }
+
+
+    /* Hide applicant selection */
+
+    document.getElementById(
+        "applicantScreen"
+    ).classList.remove("active");
+
+
+    /* Salaried */
+
+    if (selected.value === "salaried") {
+
+        document.getElementById(
+            "salariedScreen"
+        ).classList.add("active");
+
+    }
+
+
+    /* Business */
+
+    else {
+
+        document.getElementById(
+            "businessIncomeScreen"
+        ).classList.add("active");
+
+    }
+
+}
+
+
+
+/* ==========================================
+   EMI CALCULATION
+   REDUCING BALANCE
+========================================== */
+
+function calculateEMI(
+    principal,
+    annualRate,
+    months
+) {
+
+
+    const monthlyRate =
+        annualRate / 12 / 100;
+
+
+    /* Zero interest */
+
+    if (monthlyRate === 0) {
+
+        return principal / months;
+
+    }
+
+
+    const factor =
+        Math.pow(
+            1 + monthlyRate,
+            months
+        );
+
+
+    const emi =
+        principal *
+        monthlyRate *
+        factor /
+        (factor - 1);
+
+
+    return emi;
+
+}
+
+
+
+/* ==========================================
+   SALARIED CALCULATION
+========================================== */
+
+function calculateSalaried() {
+
+    hideError();
+
 
     const grossSalary =
         getNumber("grossSalary");
@@ -964,41 +1920,41 @@ function calculateEligibility() {
 
 
     const emi1 =
-        getNumber("emi1");
+        getNumber("sEmi1");
 
 
     const emi2 =
-        getNumber("emi2");
+        getNumber("sEmi2");
 
 
     const emi3 =
-        getNumber("emi3");
+        getNumber("sEmi3");
 
 
     const emi4 =
-        getNumber("emi4");
+        getNumber("sEmi4");
 
 
     const emi5 =
-        getNumber("emi5");
+        getNumber("sEmi5");
 
 
     const loanAmount =
-        getNumber("loanAmount");
+        getNumber("sLoanAmount");
 
 
     const interestRate =
-        getNumber("interestRate");
+        getNumber("sInterestRate");
 
 
     const loanTenure =
-        getNumber("loanTenure");
+        getNumber("sLoanTenure");
 
 
 
-    /* ----------------------------------------
+    /* =====================================
        VALIDATION
-    ---------------------------------------- */
+    ===================================== */
 
     if (grossSalary <= 0) {
 
@@ -1015,6 +1971,23 @@ function calculateEligibility() {
 
         showError(
             "Salary deductions cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        emi1 < 0 ||
+        emi2 < 0 ||
+        emi3 < 0 ||
+        emi4 < 0 ||
+        emi5 < 0
+    ) {
+
+        showError(
+            "EMI amounts cannot be negative."
         );
 
         return;
@@ -1056,9 +2029,9 @@ function calculateEligibility() {
 
 
 
-    /* ----------------------------------------
-       TOTAL EXISTING CIC EMIs
-    ---------------------------------------- */
+    /* =====================================
+       EXISTING EMIs
+    ===================================== */
 
     const totalExistingEmi =
         emi1 +
@@ -1069,87 +2042,22 @@ function calculateEligibility() {
 
 
 
-    /* ----------------------------------------
+    /* =====================================
        NEW CAR LOAN EMI
-       
-       REDUCING BALANCE METHOD
+    ===================================== */
 
-       P = Loan Amount
-
-       r = Monthly Interest Rate
-
-       n = Total Number of Months
-
-       EMI =
-       P × r × (1+r)^n
-       ----------------
-       (1+r)^n - 1
-    ---------------------------------------- */
-
-
-    const monthlyRate =
-        interestRate / 12 / 100;
-
-
-    // Tenure is directly entered in months
-
-    const numberOfPayments =
-        loanTenure;
-
-
-    let newLoanEmi;
-
-
-    /* Zero interest case */
-
-    if (monthlyRate === 0) {
-
-        newLoanEmi =
-            loanAmount / numberOfPayments;
-
-    }
-
-
-    /* Normal reducing balance calculation */
-
-    else {
-
-        const factor =
-            Math.pow(
-                1 + monthlyRate,
-                numberOfPayments
-            );
-
-
-        newLoanEmi =
-            loanAmount *
-            monthlyRate *
-            factor /
-            (factor - 1);
-
-    }
+    const newLoanEmi =
+        calculateEMI(
+            loanAmount,
+            interestRate,
+            loanTenure
+        );
 
 
 
-    /* ----------------------------------------
+    /* =====================================
        IN-HAND SALARY
-
-       Gross Salary
-       -
-       Salary Sheet Deduction
-       -
-       EMI 1
-       -
-       EMI 2
-       -
-       EMI 3
-       -
-       EMI 4
-       -
-       EMI 5
-       -
-       New Car Loan EMI
-    ---------------------------------------- */
+    ===================================== */
 
     const inHandSalary =
         grossSalary -
@@ -1159,74 +2067,73 @@ function calculateEligibility() {
 
 
 
-    /* ----------------------------------------
-       40% OF GROSS SALARY
-    ---------------------------------------- */
+    /* =====================================
+       40% OF GROSS
+    ===================================== */
 
-    const fortyPercentSalary =
+    const fortyPercent =
         grossSalary * 0.40;
 
 
 
-    /* ----------------------------------------
+    /* =====================================
        DIFFERENCE
-    ---------------------------------------- */
+    ===================================== */
 
     const difference =
         inHandSalary -
-        fortyPercentSalary;
+        fortyPercent;
 
 
 
-    /* ----------------------------------------
-       DISPLAY RESULTS
-    ---------------------------------------- */
+    /* =====================================
+       DISPLAY
+    ===================================== */
 
     document.getElementById(
-        "newLoanEmi"
+        "sNewLoanEmi"
     ).textContent =
         formatCurrency(newLoanEmi);
 
 
     document.getElementById(
-        "totalExistingEmi"
+        "sTotalExistingEmi"
     ).textContent =
         formatCurrency(totalExistingEmi);
 
 
     document.getElementById(
-        "inHandSalary"
+        "sInHandSalary"
     ).textContent =
         formatCurrency(inHandSalary);
 
 
     document.getElementById(
-        "fortyPercentSalary"
+        "sFortyPercent"
     ).textContent =
-        formatCurrency(fortyPercentSalary);
+        formatCurrency(fortyPercent);
 
 
     document.getElementById(
-        "difference"
+        "sDifference"
     ).textContent =
         formatCurrency(difference);
 
 
 
-    /* ----------------------------------------
-       ELIGIBILITY TEST
-
-       IN-HAND SALARY >= 40% OF GROSS
-       = ELIGIBLE
-    ---------------------------------------- */
+    /* =====================================
+       ELIGIBILITY
+    ===================================== */
 
     const eligibility =
-        document.getElementById("eligibility");
+        document.getElementById(
+            "sEligibility"
+        );
 
 
     if (
         inHandSalary >=
-        fortyPercentSalary
+        fortyPercent
     ) {
 
 
@@ -1239,8 +2146,10 @@ function calculateEligibility() {
             ✓ CUSTOMER IS ELIGIBLE
 
             <div class="difference">
-                In-hand salary is equal to or greater
-                than 40% of gross salary.
+
+                In-hand salary is equal to or
+                greater than 40% of gross salary.
+
             </div>
             `;
 
@@ -1259,7 +2168,448 @@ function calculateEligibility() {
             ✕ CUSTOMER IS NOT ELIGIBLE
 
             <div class="difference">
-                In-hand salary is below 40% of gross salary.
+
+                In-hand salary is below 40%
+                of gross salary.
+
+            </div>
+            `;
+
+    }
+
+
+    /* SHOW RESULTS */
+
+    document.getElementById(
+        "salariedResults"
+    ).style.display =
+        "block";
+
+}
+
+
+
+/* ==========================================
+   BUSINESS INCOME CALCULATION
+========================================== */
+
+function calculateBusinessIncome() {
+
+    hideError();
+
+
+    const fy202425 =
+        getNumber("fy202425");
+
+
+    const fy202526 =
+        getNumber("fy202526");
+
+
+
+    /* =====================================
+       VALIDATION
+    ===================================== */
+
+    if (
+        fy202425 < 0 ||
+        fy202526 < 0
+    ) {
+
+        showError(
+            "Income cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        fy202425 === 0 &&
+        fy202526 === 0
+    ) {
+
+        showError(
+            "Please enter income for both financial years."
+        );
+
+        return;
+
+    }
+
+
+
+    /* =====================================
+       AVERAGE ANNUAL INCOME
+
+       (FY 2024-25 + FY 2025-26) / 2
+    ===================================== */
+
+    const averageAnnualIncome =
+        (
+            fy202425 +
+            fy202526
+        ) / 2;
+
+
+
+    /* =====================================
+       MINIMUM INCOME CHECK
+
+       ₹3,00,000 ANNUAL
+    ===================================== */
+
+    if (
+        averageAnnualIncome <
+        300000
+    ) {
+
+
+        const notEligible =
+            document.getElementById(
+                "businessNotEligible"
+            );
+
+
+        notEligible.className =
+            "business-check not-eligible";
+
+
+        notEligible.style.display =
+            "block";
+
+
+        return;
+
+    }
+
+
+
+    /* =====================================
+       MONTHLY INCOME
+
+       Average Annual Income / 12
+    ===================================== */
+
+    const monthlyIncome =
+        averageAnnualIncome / 12;
+
+
+
+    /* STORE BUSINESS INCOME */
+
+    window.businessMonthlyIncome =
+        monthlyIncome;
+
+
+    window.businessAverageAnnualIncome =
+        averageAnnualIncome;
+
+
+
+    /* DISPLAY BUSINESS INCOME */
+
+    document.getElementById(
+        "bAverageAnnual"
+    ).textContent =
+        formatCurrency(
+            averageAnnualIncome
+        );
+
+
+    document.getElementById(
+        "bMonthlyIncome"
+    ).textContent =
+        formatCurrency(
+            monthlyIncome
+        );
+
+
+
+    /* Hide first business screen */
+
+    document.getElementById(
+        "businessIncomeScreen"
+    ).classList.remove("active");
+
+
+    /* Hide not eligible message */
+
+    document.getElementById(
+        "businessNotEligible"
+    ).style.display =
+        "none";
+
+
+    /* Show loan assessment */
+
+    document.getElementById(
+        "businessLoanScreen"
+    ).classList.add("active");
+
+}
+
+
+
+/* ==========================================
+   BUSINESS LOAN CALCULATION
+========================================== */
+
+function calculateBusinessLoan() {
+
+    hideError();
+
+
+    const monthlyIncome =
+        window.businessMonthlyIncome || 0;
+
+
+    const emi1 =
+        getNumber("bEmi1");
+
+
+    const emi2 =
+        getNumber("bEmi2");
+
+
+    const emi3 =
+        getNumber("bEmi3");
+
+
+    const emi4 =
+        getNumber("bEmi4");
+
+
+    const emi5 =
+        getNumber("bEmi5");
+
+
+    const loanAmount =
+        getNumber("bLoanAmount");
+
+
+    const interestRate =
+        getNumber("bInterestRate");
+
+
+    const loanTenure =
+        getNumber("bLoanTenure");
+
+
+
+    /* =====================================
+       VALIDATION
+    ===================================== */
+
+    if (monthlyIncome <= 0) {
+
+        showError(
+            "Please complete the business income assessment first."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        emi1 < 0 ||
+        emi2 < 0 ||
+        emi3 < 0 ||
+        emi4 < 0 ||
+        emi5 < 0
+    ) {
+
+        showError(
+            "EMI amounts cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    if (loanAmount <= 0) {
+
+        showError(
+            "Please enter a valid Car Loan Amount."
+        );
+
+        return;
+
+    }
+
+
+    if (interestRate < 0) {
+
+        showError(
+            "Interest rate cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    if (loanTenure <= 0) {
+
+        showError(
+            "Please enter a valid Loan Tenure in months."
+        );
+
+        return;
+
+    }
+
+
+
+    /* =====================================
+       EXISTING CIC EMIs
+    ===================================== */
+
+    const totalExistingEmi =
+        emi1 +
+        emi2 +
+        emi3 +
+        emi4 +
+        emi5;
+
+
+
+    /* =====================================
+       NEW CAR LOAN EMI
+    ===================================== */
+
+    const newLoanEmi =
+        calculateEMI(
+            loanAmount,
+            interestRate,
+            loanTenure
+        );
+
+
+
+    /* =====================================
+       IN-HAND MONTHLY INCOME
+
+       Monthly Income
+       - Existing CIC EMIs
+       - New Car Loan EMI
+    ===================================== */
+
+    const inHandIncome =
+        monthlyIncome -
+        totalExistingEmi -
+        newLoanEmi;
+
+
+
+    /* =====================================
+       40% OF MONTHLY INCOME
+    ===================================== */
+
+    const fortyPercent =
+        monthlyIncome * 0.40;
+
+
+
+    /* =====================================
+       DIFFERENCE
+    ===================================== */
+
+    const difference =
+        inHandIncome -
+        fortyPercent;
+
+
+
+    /* =====================================
+       DISPLAY RESULTS
+    ===================================== */
+
+    document.getElementById(
+        "bNewLoanEmi"
+    ).textContent =
+        formatCurrency(newLoanEmi);
+
+
+    document.getElementById(
+        "bTotalExistingEmi"
+    ).textContent =
+        formatCurrency(totalExistingEmi);
+
+
+    document.getElementById(
+        "bInHandIncome"
+    ).textContent =
+        formatCurrency(inHandIncome);
+
+
+    document.getElementById(
+        "bFortyPercent"
+    ).textContent =
+        formatCurrency(fortyPercent);
+
+
+    document.getElementById(
+        "bDifference"
+    ).textContent =
+        formatCurrency(difference);
+
+
+
+    /* =====================================
+       ELIGIBILITY
+    ===================================== */
+
+    const eligibility =
+        document.getElementById(
+            "bEligibility"
+        );
+
+
+    if (
+        inHandIncome >=
+        fortyPercent
+    ) {
+
+
+        eligibility.className =
+            "eligibility eligible";
+
+
+        eligibility.innerHTML =
+            `
+            ✓ CUSTOMER IS ELIGIBLE
+
+            <div class="difference">
+
+                In-hand income is equal to or
+                greater than 40% of monthly income.
+
+            </div>
+            `;
+
+    }
+
+
+    else {
+
+
+        eligibility.className =
+            "eligibility not-eligible";
+
+
+        eligibility.innerHTML =
+            `
+            ✕ CUSTOMER IS NOT ELIGIBLE
+
+            <div class="difference">
+
+                In-hand income is below 40%
+                of monthly income.
+
             </div>
             `;
 
@@ -1267,11 +2617,11 @@ function calculateEligibility() {
 
 
 
-    /* ----------------------------------------
-       SHOW RESULTS
-    ---------------------------------------- */
+    /* SHOW RESULTS */
 
-    results.style.display =
+    document.getElementById(
+        "businessResults"
+    ).style.display =
         "block";
 
 }
@@ -1279,40 +2629,67 @@ function calculateEligibility() {
 
 
 /* ==========================================
-   SHOW ERROR
+   BACK TO APPLICANT SELECTION
 ========================================== */
 
-function showError(message) {
+function goBackToApplicantSelection() {
 
-    const errorMessage =
-        document.getElementById(
-            "errorMessage"
-        );
+    resetCalculator();
 
 
-    const results =
-        document.getElementById(
-            "results"
-        );
+    document.getElementById(
+        "salariedScreen"
+    ).classList.remove("active");
 
 
-    errorMessage.textContent =
-        message;
+    document.getElementById(
+        "businessIncomeScreen"
+    ).classList.remove("active");
 
 
-    errorMessage.style.display =
-        "block";
+    document.getElementById(
+        "businessLoanScreen"
+    ).classList.remove("active");
 
 
-    results.style.display =
-        "none";
+    document.getElementById(
+        "applicantScreen"
+    ).classList.add("active");
 
 }
 
 
 
 /* ==========================================
-   RESET CALCULATOR
+   BACK TO BUSINESS INCOME
+========================================== */
+
+function goBackToBusinessIncome() {
+
+    hideError();
+
+
+    document.getElementById(
+        "businessResults"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "businessLoanScreen"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "businessIncomeScreen"
+    ).classList.add("active");
+
+}
+
+
+
+/* ==========================================
+   RESET
 ========================================== */
 
 function resetCalculator() {
@@ -1324,21 +2701,41 @@ function resetCalculator() {
 
         "salaryDeduction",
 
-        "emi1",
+        "sEmi1",
 
-        "emi2",
+        "sEmi2",
 
-        "emi3",
+        "sEmi3",
 
-        "emi4",
+        "sEmi4",
 
-        "emi5",
+        "sEmi5",
 
-        "loanAmount",
+        "sLoanAmount",
 
-        "interestRate",
+        "sInterestRate",
 
-        "loanTenure"
+        "sLoanTenure",
+
+        "fy202425",
+
+        "fy202526",
+
+        "bEmi1",
+
+        "bEmi2",
+
+        "bEmi3",
+
+        "bEmi4",
+
+        "bEmi5",
+
+        "bLoanAmount",
+
+        "bInterestRate",
+
+        "bLoanTenure"
 
     ];
 
@@ -1352,23 +2749,81 @@ function resetCalculator() {
     );
 
 
+
+    /* Reset radio buttons */
+
+    document.getElementById(
+        "salaried"
+    ).checked = false;
+
+
+    document.getElementById(
+        "business"
+    ).checked = false;
+
+
+
+    /* Hide all screens */
+
+    document.getElementById(
+        "salariedScreen"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "businessIncomeScreen"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "businessLoanScreen"
+    ).classList.remove("active");
+
+
+
+    /* Show applicant screen */
+
+    document.getElementById(
+        "applicantScreen"
+    ).classList.add("active");
+
+
+
     /* Hide results */
 
     document.getElementById(
-        "results"
-    ).style.display = "none";
-
-
-    /* Hide error */
-
-    document.getElementById(
-        "errorMessage"
-    ).style.display = "none";
+        "salariedResults"
+    ).style.display =
+        "none";
 
 
     document.getElementById(
-        "errorMessage"
-    ).textContent = "";
+        "businessResults"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "businessNotEligible"
+    ).style.display =
+        "none";
+
+
+
+    /* Clear stored business income */
+
+    window.businessMonthlyIncome =
+        0;
+
+
+    window.businessAverageAnnualIncome =
+        0;
+
+
+
+    /* Clear error */
+
+    hideError();
 
 }
 

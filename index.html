@@ -92,6 +92,13 @@
         }
 
 
+        .section {
+
+            margin-bottom: 25px;
+
+        }
+
+
         .section-title {
 
             font-size: 17px;
@@ -101,13 +108,6 @@
             margin-bottom: 17px;
 
             color: #111827;
-
-        }
-
-
-        .section {
-
-            margin-bottom: 25px;
 
         }
 
@@ -467,7 +467,9 @@
 
         <h1>Car Loan Eligibility Calculator</h1>
 
-        <p>Assess eligibility based on salary & existing EMIs</p>
+        <p>
+            Assess eligibility based on salary & existing EMIs
+        </p>
 
     </div>
 
@@ -686,24 +688,23 @@
             </div>
 
 
-            <!-- Loan Tenure -->
+            <!-- Loan Tenure IN MONTHS -->
 
             <div class="input-group">
 
                 <label for="loanTenure">
-                    Loan Tenure (Years)
+                    Loan Tenure (Months)
                 </label>
 
                 <input
                     type="number"
                     id="loanTenure"
                     min="1"
-                    max="30"
                     step="1"
-                    placeholder="Enter loan tenure">
+                    placeholder="Enter loan tenure in months">
 
                 <div class="hint">
-                    EMI is calculated using reducing-balance method.
+                    EMI is calculated using the reducing-balance method.
                 </div>
 
             </div>
@@ -792,7 +793,7 @@
 
 
 
-            <!-- IN HAND SALARY -->
+            <!-- IN-HAND SALARY -->
 
             <div class="result-row highlight">
 
@@ -1046,7 +1047,7 @@ function calculateEligibility() {
     if (loanTenure <= 0) {
 
         showError(
-            "Please enter a valid Loan Tenure."
+            "Please enter a valid Loan Tenure in months."
         );
 
         return;
@@ -1071,37 +1072,47 @@ function calculateEligibility() {
     /* ----------------------------------------
        NEW CAR LOAN EMI
        
-       Reducing Balance EMI Formula:
+       REDUCING BALANCE METHOD
+
+       P = Loan Amount
+
+       r = Monthly Interest Rate
+
+       n = Total Number of Months
 
        EMI =
        P × r × (1+r)^n
        ----------------
        (1+r)^n - 1
-
-       P = Loan Amount
-       r = Monthly Interest Rate
-       n = Number of Monthly Instalments
     ---------------------------------------- */
+
 
     const monthlyRate =
         interestRate / 12 / 100;
 
 
+    // Tenure is directly entered in months
+
     const numberOfPayments =
-        loanTenure * 12;
+        loanTenure;
 
 
     let newLoanEmi;
 
 
-    if (monthlyRate === 0) {
+    /* Zero interest case */
 
-        // Zero-interest loan
+    if (monthlyRate === 0) {
 
         newLoanEmi =
             loanAmount / numberOfPayments;
 
-    } else {
+    }
+
+
+    /* Normal reducing balance calculation */
+
+    else {
 
         const factor =
             Math.pow(
@@ -1122,15 +1133,22 @@ function calculateEligibility() {
 
     /* ----------------------------------------
        IN-HAND SALARY
-       
+
        Gross Salary
-       - Salary Sheet Deduction
-       - EMI 1
-       - EMI 2
-       - EMI 3
-       - EMI 4
-       - EMI 5
-       - New Car Loan EMI
+       -
+       Salary Sheet Deduction
+       -
+       EMI 1
+       -
+       EMI 2
+       -
+       EMI 3
+       -
+       EMI 4
+       -
+       EMI 5
+       -
+       New Car Loan EMI
     ---------------------------------------- */
 
     const inHandSalary =
@@ -1197,16 +1215,13 @@ function calculateEligibility() {
 
     /* ----------------------------------------
        ELIGIBILITY TEST
+
+       IN-HAND SALARY >= 40% OF GROSS
+       = ELIGIBLE
     ---------------------------------------- */
 
     const eligibility =
         document.getElementById("eligibility");
-
-
-    const eligibilityMessage =
-        document.getElementById(
-            "eligibilityMessage"
-        );
 
 
     if (
@@ -1214,52 +1229,39 @@ function calculateEligibility() {
         fortyPercentSalary
     ) {
 
+
         eligibility.className =
             "eligibility eligible";
 
 
         eligibility.innerHTML =
-            "✓ CUSTOMER IS ELIGIBLE";
+            `
+            ✓ CUSTOMER IS ELIGIBLE
+
+            <div class="difference">
+                In-hand salary is equal to or greater
+                than 40% of gross salary.
+            </div>
+            `;
+
+    }
 
 
-        const message =
-            document.createElement("div");
+    else {
 
-
-        message.className =
-            "difference";
-
-
-        message.textContent =
-            "In-hand salary is equal to or greater than 40% of gross salary.";
-
-
-        eligibility.appendChild(message);
-
-
-    } else {
 
         eligibility.className =
             "eligibility not-eligible";
 
 
         eligibility.innerHTML =
-            "✕ CUSTOMER IS NOT ELIGIBLE";
+            `
+            ✕ CUSTOMER IS NOT ELIGIBLE
 
-
-        const message =
-            document.createElement("div");
-
-
-        message.className =
-            "difference";
-
-
-        message.textContent =
-            "In-hand salary is below 40% of gross salary.";
-
-
-        eligibility.appendChild(message);
+            <div class="difference">
+                In-hand salary is below 40% of gross salary.
+            </div>
+            `;
 
     }
 

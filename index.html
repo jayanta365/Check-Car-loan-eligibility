@@ -551,6 +551,81 @@
 
 
         /* =====================================
+           APUN BAHAN ALERT
+        ===================================== */
+
+        .apun-bahan-alert {
+
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 14px 16px;
+
+            border-radius: 12px;
+
+            background: #fff7ed;
+
+            color: #c2410c;
+
+            border: 1px solid #fdba74;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            line-height: 1.45;
+
+        }
+
+
+        .apun-bahan-alert.show {
+            display: block;
+        }
+
+
+        /* =====================================
+           MINIMUM LOAN PERIOD OUTPUT
+        ===================================== */
+
+        .minimum-period-box {
+
+            margin-top: 18px;
+
+            padding: 16px;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+
+        }
+
+
+        .minimum-period-box .box-title {
+
+            margin-bottom: 12px;
+
+            color: #1e40af;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            text-align: center;
+
+        }
+
+
+        .minimum-period-box .result-row {
+            margin-top: 6px;
+        }
+
+
+        /* =====================================
            ELIGIBILITY
         ===================================== */
 
@@ -1096,14 +1171,14 @@
                 </div>
 
 
-                <div class="result-row">
-                    <div class="result-label">Date of Birth</div>
-                    <div class="result-value" id="sResultDob">-</div>
-                </div>
-
                 <div class="result-row highlight">
                     <div class="result-label">Date of Superannuation</div>
                     <div class="result-value" id="sSuperannuationDate">-</div>
+                </div>
+
+                <div class="result-row highlight" id="sPensionerRow" style="display:none;">
+                    <div class="result-label">Applicant Status</div>
+                    <div class="result-value" id="sPensionerStatus">-</div>
                 </div>
 
                 <div class="result-row highlight">
@@ -1338,6 +1413,11 @@
                     <div class="result-value" id="bMaxPeriod">-</div>
                 </div>
 
+                <div class="apun-bahan-alert" id="bApunBahanAlert">
+                    ⚠ APUN BAHAN SCHEME ALERT<br>
+                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
+                </div>
+
             </div>
 
 
@@ -1545,6 +1625,31 @@
 
 
 
+            <!-- MINIMUM LOAN PERIOD OUTPUT -->
+
+            <div class="minimum-period-box" id="bMinimumPeriodBox" style="display:none;">
+
+                <div class="box-title">
+                    Minimum Loan Period Option
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Minimum Loan Period</div>
+                    <div class="result-value" id="bMinimumLoanPeriod">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">EMI at Minimum Loan Period</div>
+                    <div class="result-value" id="bMinimumPeriodEmi">₹0.00</div>
+                </div>
+
+                <div class="hint" style="margin-top:10px; text-align:center;">
+                    Minimum Apun Bahan repayment period is 3 years, subject to all applicable eligibility conditions.
+                </div>
+
+            </div>
+
+
             <!-- BUSINESS RESULTS -->
 
             <div
@@ -1566,11 +1671,6 @@
                 <div
                     class="eligibility"
                     id="bEligibility">
-
-                    <div class="result-row">
-                        <div class="result-label">Date of Birth</div>
-                        <div class="result-value" id="bResultDob">-</div>
-                    </div>
 
                     <div class="result-row highlight">
                         <div class="result-label">Maximum Loan Period</div>
@@ -1966,6 +2066,11 @@ function updateLoanPeriod(type) {
     if (!dob) {
         document.getElementById(rowId).style.display = "none";
 
+        if (type === "b") {
+            const apunAlert = document.getElementById("bApunBahanAlert");
+            if (apunAlert) apunAlert.classList.remove("show");
+        }
+
         const hint = document.getElementById(hintId);
 
         hint.classList.remove("age-error");
@@ -1981,6 +2086,11 @@ function updateLoanPeriod(type) {
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
 
+        if (type === "b") {
+            const apunAlert = document.getElementById("bApunBahanAlert");
+            if (apunAlert) apunAlert.classList.remove("show");
+        }
+
         const hint = document.getElementById(hintId);
 
         hint.textContent =
@@ -1994,6 +2104,14 @@ function updateLoanPeriod(type) {
     const hint = document.getElementById(hintId);
 
     hint.classList.remove("age-error");
+
+    // Apun Bahan scheme age condition: maximum 53 years.
+    if (type === "b") {
+        const apunAlert = document.getElementById("bApunBahanAlert");
+        if (apunAlert) {
+            apunAlert.classList.toggle("show", ageInfo.age > 53);
+        }
+    }
 
     document.getElementById(rowId).style.display = "flex";
     document.getElementById(valueId).textContent =
@@ -2134,9 +2252,6 @@ function calculateSalaried() {
 
     const difference = inHandSalary - fortyPercent;
 
-    document.getElementById("sResultDob").textContent =
-        formatDateForDisplay(dob);
-
     const superannuationDate =
         calculateSuperannuationDate(dob);
 
@@ -2148,6 +2263,21 @@ function calculateSalaried() {
                 year: "numeric"
             }).format(superannuationDate)
             : "-";
+
+    // Applicants above 60 years are shown as PENSIONER in the
+    // Salaried Individual final result only.
+    const pensionerRow = document.getElementById("sPensionerRow");
+    const pensionerStatus = document.getElementById("sPensionerStatus");
+
+    if (pensionerRow && pensionerStatus) {
+        if (ageInfo.age > 60) {
+            pensionerRow.style.display = "flex";
+            pensionerStatus.textContent = "PENSIONER";
+        } else {
+            pensionerRow.style.display = "none";
+            pensionerStatus.textContent = "-";
+        }
+    }
 
     document.getElementById("sResultPeriod").textContent =
         formatLoanPeriod(ageInfo.maxMonths);
@@ -2428,9 +2558,6 @@ function calculateBusinessLoan() {
 
     const difference = inHandIncome - fortyPercent;
 
-    document.getElementById("bResultDob").textContent =
-        formatDateForDisplay(dob);
-
     document.getElementById("bResultPeriod").textContent =
         formatLoanPeriod(ageInfo.maxMonths);
 
@@ -2439,6 +2566,29 @@ function calculateBusinessLoan() {
 
     document.getElementById("bNewLoanEmi").textContent =
         formatCurrency(maximumPermissibleEmi);
+
+    // Apun Bahan repayment period is 3 to 7 years.
+    // Show the minimum 3-year option only when the customer's age-based
+    // maximum period can accommodate the required minimum of 3 years.
+    const minimumApunBahanMonths = 36;
+    const minimumPeriodBox = document.getElementById("bMinimumPeriodBox");
+    const minimumPeriodValue = document.getElementById("bMinimumLoanPeriod");
+    const minimumPeriodEmiValue = document.getElementById("bMinimumPeriodEmi");
+
+    if (minimumPeriodBox && minimumPeriodValue && minimumPeriodEmiValue) {
+        if (ageInfo.maxMonths >= minimumApunBahanMonths && maximumPermissibleEmi > 0) {
+            minimumPeriodBox.style.display = "block";
+            minimumPeriodValue.textContent = formatLoanPeriod(minimumApunBahanMonths);
+            // At the minimum tenure, the maximum permissible EMI remains the
+            // repayment-capacity ceiling; the corresponding eligible principal
+            // is lower than at the maximum tenure.
+            minimumPeriodEmiValue.textContent = formatCurrency(maximumPermissibleEmi);
+        } else {
+            minimumPeriodBox.style.display = "block";
+            minimumPeriodValue.textContent = "Not Available";
+            minimumPeriodEmiValue.textContent = "-";
+        }
+    }
 
     const eligibility = document.getElementById("bEligibility");
     const messageBox = document.getElementById("bEligibilityMessage");
@@ -2652,6 +2802,11 @@ function resetCalculator() {
         "bMaxPeriodRow"
     ).style.display = "none";
 
+    const bApunAlert = document.getElementById("bApunBahanAlert");
+    if (bApunAlert) bApunAlert.classList.remove("show");
+
+    const bMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
+    if (bMinimumPeriodBox) bMinimumPeriodBox.style.display = "none";
 
     /* Hide results */
 

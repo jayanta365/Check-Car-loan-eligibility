@@ -273,6 +273,14 @@
         }
 
 
+        .hint.age-error {
+
+            color: #b91c1c;
+            font-weight: bold;
+
+        }
+
+
         .hint {
 
             font-size: 11px;
@@ -2044,8 +2052,14 @@ function updateLoanPeriod(type) {
 
     if (!dob) {
         document.getElementById(rowId).style.display = "none";
-        document.getElementById(hintId).textContent =
+
+        const hint = document.getElementById(hintId);
+
+        hint.classList.remove("age-error");
+
+        hint.textContent =
             "Minimum age: 18 years. Maximum loan maturity age: 70 years.";
+
         return;
     }
 
@@ -2053,10 +2067,20 @@ function updateLoanPeriod(type) {
 
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
-        document.getElementById(hintId).textContent =
+
+        const hint = document.getElementById(hintId);
+
+        hint.textContent =
             "✕ NOT ELIGIBLE: " + ageInfo.message;
+
+        hint.classList.add("age-error");
+
         return;
     }
+
+    const hint = document.getElementById(hintId);
+
+    hint.classList.remove("age-error");
 
     document.getElementById(rowId).style.display = "flex";
     document.getElementById(valueId).textContent =

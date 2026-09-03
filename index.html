@@ -2911,6 +2911,63 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+
+<script>
+(function () {
+    function enforceApunBahanAlertRules() {
+        const salariedScreen = document.getElementById('salariedScreen');
+        const businessScreen = document.getElementById('businessScreen');
+
+        // Hide Apun Bahan alerts on Business Man screen.
+        if (businessScreen) {
+            businessScreen.querySelectorAll('*').forEach(function (el) {
+                const t = (el.textContent || '').trim().toUpperCase();
+                if (t.includes('APUN BAHAN') && t.includes('NOT ELIGIBLE')) {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
+        // Hide the alert for Salaried Pensioners.
+        if (salariedScreen) {
+            const pensioner = Array.from(salariedScreen.querySelectorAll('*')).some(function (el) {
+                return (el.textContent || '').trim().toUpperCase() === 'PENSIONER';
+            });
+            if (pensioner) {
+                salariedScreen.querySelectorAll('*').forEach(function (el) {
+                    const t = (el.textContent || '').trim().toUpperCase();
+                    if (t.includes('APUN BAHAN') && t.includes('NOT ELIGIBLE')) {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        }
+    }
+
+    const originalCalculate = window.calculateSalaried;
+    if (typeof originalCalculate === 'function') {
+        window.calculateSalaried = function () {
+            const result = originalCalculate.apply(this, arguments);
+            setTimeout(enforceApunBahanAlertRules, 0);
+            return result;
+        };
+    }
+
+    const originalBusiness = window.calculateBusiness;
+    if (typeof originalBusiness === 'function') {
+        window.calculateBusiness = function () {
+            const result = originalBusiness.apply(this, arguments);
+            setTimeout(enforceApunBahanAlertRules, 0);
+            return result;
+        };
+    }
+
+    document.addEventListener('input', enforceApunBahanAlertRules);
+    document.addEventListener('change', enforceApunBahanAlertRules);
+    setTimeout(enforceApunBahanAlertRules, 100);
+})();
+</script>
+
 </body>
 
 </html>

@@ -571,6 +571,13 @@
         }
 
 
+        .eligibility-status {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid currentColor;
+        }
+
+
         .eligible {
 
             background: #ecfdf5;
@@ -1553,49 +1560,34 @@
 
 
 
-                <div class="result-row">
-                    <div class="result-label">Date of Birth</div>
-                    <div class="result-value" id="bResultDob">-</div>
-                </div>
-
-                <div class="result-row highlight">
-                    <div class="result-label">Maximum Loan Period</div>
-                    <div class="result-value" id="bResultPeriod">-</div>
-                </div>
-
-                <div class="result-row highlight">
-                    <div class="result-label">Maximum Loan Eligibility</div>
-                    <div class="result-value" id="bMaxLoanEligibility">₹0.00</div>
-                </div>
-
-
-                <!-- NEW CAR EMI -->
-
-                <div class="result-row highlight">
-
-                    <div class="result-label">
-
-                        New Car Loan EMI
-
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="bNewLoanEmi">
-
-                        ₹0.00
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ELIGIBILITY -->
-
+                <!-- BUSINESS ELIGIBILITY CALCULATION -->
+                <!-- All Business Man calculation results are intentionally kept
+                     inside the .eligibility container. -->
                 <div
                     class="eligibility"
                     id="bEligibility">
+
+                    <div class="result-row">
+                        <div class="result-label">Date of Birth</div>
+                        <div class="result-value" id="bResultDob">-</div>
+                    </div>
+
+                    <div class="result-row highlight">
+                        <div class="result-label">Maximum Loan Period</div>
+                        <div class="result-value" id="bResultPeriod">-</div>
+                    </div>
+
+                    <div class="result-row highlight">
+                        <div class="result-label">Maximum Loan Eligibility</div>
+                        <div class="result-value" id="bMaxLoanEligibility">₹0.00</div>
+                    </div>
+
+                    <div class="result-row highlight">
+                        <div class="result-label">New Car Loan EMI</div>
+                        <div class="result-value" id="bNewLoanEmi">₹0.00</div>
+                    </div>
+
+                    <div id="bEligibilityMessage"></div>
 
                 </div>
 
@@ -1939,17 +1931,26 @@ function showAgeIneligibility(type, message, dob) {
     document.getElementById(periodId).textContent = "Not Eligible";
     document.getElementById(loanId).textContent = "₹0.00";
 
-    const eligibility =
-        document.getElementById(eligibilityId);
-
+    const eligibility = document.getElementById(eligibilityId);
     eligibility.className = "eligibility not-eligible";
 
-    eligibility.innerHTML = `
-        ✕ CUSTOMER IS NOT ELIGIBLE
-        <div class="difference">
-            ${message}
-        </div>
-    `;
+    if (isSalaried) {
+        eligibility.innerHTML = `
+            ✕ CUSTOMER IS NOT ELIGIBLE
+            <div class="difference">${message}</div>
+        `;
+    } else {
+        // Keep all Business Man calculation rows inside .eligibility.
+        const messageBox = document.getElementById("bEligibilityMessage");
+        if (messageBox) {
+            messageBox.innerHTML = `
+                <div class="eligibility-status">
+                    ✕ CUSTOMER IS NOT ELIGIBLE
+                    <div class="difference">${message}</div>
+                </div>
+            `;
+        }
+    }
 }
 
 
@@ -2440,30 +2441,39 @@ function calculateBusinessLoan() {
         formatCurrency(maximumPermissibleEmi);
 
     const eligibility = document.getElementById("bEligibility");
+    const messageBox = document.getElementById("bEligibilityMessage");
 
     if (maximumPermissibleEmi > 0 && maxLoanEligibility > 0) {
 
         eligibility.className = "eligibility eligible";
 
-        eligibility.innerHTML = `
-            ✓ CUSTOMER IS ELIGIBLE
-            <div class="difference">
-                Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
-                based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
-            </div>
-        `;
+        if (messageBox) {
+            messageBox.innerHTML = `
+                <div class="eligibility-status">
+                    ✓ CUSTOMER IS ELIGIBLE
+                    <div class="difference">
+                        Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
+                        based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
+                    </div>
+                </div>
+            `;
+        }
 
     } else {
 
         eligibility.className = "eligibility not-eligible";
 
-        eligibility.innerHTML = `
-            ✕ CUSTOMER IS NOT ELIGIBLE
-            <div class="difference">
-                Existing EMIs leave no permissible amount
-                for a new car-loan EMI under the 40% income criterion.
-            </div>
-        `;
+        if (messageBox) {
+            messageBox.innerHTML = `
+                <div class="eligibility-status">
+                    ✕ CUSTOMER IS NOT ELIGIBLE
+                    <div class="difference">
+                        Existing EMIs leave no permissible amount
+                        for a new car-loan EMI under the 40% income criterion.
+                    </div>
+                </div>
+            `;
+        }
     }
 
     document.getElementById("businessResults").style.display = "block";

@@ -585,6 +585,12 @@
             display: block;
         }
 
+        .apun-bahan-alert.apun-bahan-eligible {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
 
         /* =====================================
            MINIMUM LOAN PERIOD OUTPUT
@@ -2093,16 +2099,28 @@ function updateLoanPeriod(type) {
     const ageInfo = getLoanPeriodFromDob(dob);
 
     // Apun Bahan alert is ONLY for Salaried Individual.
-    // Show it immediately after DOB entry when age is above 53.
+    // Age 53 or below: show green eligibility alert immediately.
+    // Above 53 through 60: keep the existing red alert.
     // Pensioners (above 60) must not receive this alert.
     if (type === "s") {
         const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-        if (sApunBahanAlert) {
-            sApunBahanAlert.classList.toggle(
-                "show",
-                ageInfo.age !== undefined &&
-                ageInfo.age > 53 && ageInfo.age <= 60
-            );
+        if (sApunBahanAlert && ageInfo.age !== undefined) {
+            if (ageInfo.age <= 53) {
+                sApunBahanAlert.classList.add("show", "apun-bahan-eligible");
+                sApunBahanAlert.innerHTML = `
+                    ✓ APUN BAHAN SCHEME ALERT<br>
+                    Applicant is eligible for the Apun Bahan Scheme.
+                `;
+            } else if (ageInfo.age > 53 && ageInfo.age <= 60) {
+                sApunBahanAlert.classList.add("show");
+                sApunBahanAlert.classList.remove("apun-bahan-eligible");
+                sApunBahanAlert.innerHTML = `
+                    ⚠ APUN BAHAN SCHEME ALERT<br>
+                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
+                `;
+            } else {
+                sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
+            }
         }
     }
 
@@ -2193,7 +2211,7 @@ function calculateSalaried() {
     // Always reset the Apun Bahan alert before evaluating the current applicant.
     const sApunBahanAlertReset = document.getElementById("sApunBahanAlert");
     if (sApunBahanAlertReset) {
-        sApunBahanAlertReset.classList.remove("show");
+        sApunBahanAlertReset.classList.remove("show", "apun-bahan-eligible");
     }
 
     const dob = document.getElementById("sDob").value;
@@ -2350,14 +2368,27 @@ function calculateSalaried() {
         }
     }
 
-    // Apun Bahan alert applies ONLY to Salaried Individuals who are
-    // above 53 years but are NOT pensioners. Pensioners must never see it.
+    // Apun Bahan alert applies ONLY to Salaried Individuals.
+    // Age 53 or below = eligible (green); above 53 through 60 = not eligible.
+    // Pensioners must never see it.
     const sApunBahanAlert = document.getElementById("sApunBahanAlert");
     if (sApunBahanAlert) {
-        sApunBahanAlert.classList.toggle(
-            "show",
-            ageInfo.age > 53 && ageInfo.age <= 60
-        );
+        if (ageInfo.age <= 53) {
+            sApunBahanAlert.classList.add("show", "apun-bahan-eligible");
+            sApunBahanAlert.innerHTML = `
+                ✓ APUN BAHAN SCHEME ALERT<br>
+                Applicant is eligible for the Apun Bahan Scheme.
+            `;
+        } else if (ageInfo.age > 53 && ageInfo.age <= 60) {
+            sApunBahanAlert.classList.add("show");
+            sApunBahanAlert.classList.remove("apun-bahan-eligible");
+            sApunBahanAlert.innerHTML = `
+                ⚠ APUN BAHAN SCHEME ALERT<br>
+                Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
+            `;
+        } else {
+            sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
+        }
     }
 
     const eligibility = document.getElementById("sEligibility");

@@ -585,6 +585,25 @@
             display: block;
         }
 
+        .apun-bahan-eligible {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.45;
+        }
+
+        .apun-bahan-eligible.show {
+            display: block;
+        }
+
+
 
         /* =====================================
            MINIMUM LOAN PERIOD OUTPUT
@@ -1224,6 +1243,11 @@
                     ⚠ APUN BAHAN SCHEME ALERT<br>
                     Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
                 </div>
+                <div class="apun-bahan-eligible" id="sApunBahanEligible">
+                    ✓ APUN BAHAN SCHEME ELIGIBLE<br>
+                    Applicant is eligible for the Apun Bahan Scheme because the age is 53 years or below.
+                </div>
+
 
                 <div
                     class="eligibility"
@@ -2091,19 +2115,27 @@ function updateLoanPeriod(type) {
     }
 
     const ageInfo = getLoanPeriodFromDob(dob);
-
-    // Apun Bahan alert is ONLY for Salaried Individual.
-    // Show it immediately after DOB entry when age is above 53.
-    // Pensioners (above 60) must not receive this alert.
+    // Apun Bahan status is ONLY for Salaried Individual.
+    // Age 53 or below: eligible (green).
+    // Above 53 and up to 60: not eligible (orange).
+    // Above 60: pensioner, so neither alert is shown.
     if (type === "s") {
         const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-        if (sApunBahanAlert) {
-            sApunBahanAlert.classList.toggle(
-                "show",
-                ageInfo.age !== undefined &&
-                ageInfo.age > 53 && ageInfo.age <= 60
-            );
+        const sApunBahanEligible = document.getElementById("sApunBahanEligible");
+
+        if (sApunBahanAlert) sApunBahanAlert.classList.remove("show");
+        if (sApunBahanEligible) sApunBahanEligible.classList.remove("show");
+
+        if (ageInfo.age !== undefined && ageInfo.age <= 53) {
+            if (sApunBahanEligible) sApunBahanEligible.classList.add("show");
+        } else if (
+            ageInfo.age !== undefined &&
+            ageInfo.age > 53 &&
+            ageInfo.age <= 60
+        ) {
+            if (sApunBahanAlert) sApunBahanAlert.classList.add("show");
         }
+    }
     }
 
     if (!ageInfo.valid) {
@@ -2296,6 +2328,11 @@ function calculateSalaried() {
                 pensionerApunAlert.classList.remove("show");
                 pensionerApunAlert.style.display = "none";
             }
+            const pensionerApunEligible = document.getElementById("sApunBahanEligible");
+            if (pensionerApunEligible) {
+                pensionerApunEligible.classList.remove("show");
+                pensionerApunEligible.style.display = "none";
+            }
             // Do not show superannuation date for pensioners.
             if (superannuationRow) superannuationRow.style.display = "none";
         } else {
@@ -2350,14 +2387,19 @@ function calculateSalaried() {
         }
     }
 
-    // Apun Bahan alert applies ONLY to Salaried Individuals who are
-    // above 53 years but are NOT pensioners. Pensioners must never see it.
-    const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-    if (sApunBahanAlert) {
-        sApunBahanAlert.classList.toggle(
-            "show",
-            ageInfo.age > 53 && ageInfo.age <= 60
-        );
+
+
+    // Keep the Apun Bahan status synchronized after Calculate.
+    const sApunBahanAlertCalc = document.getElementById("sApunBahanAlert");
+    const sApunBahanEligibleCalc = document.getElementById("sApunBahanEligible");
+
+    if (sApunBahanAlertCalc) sApunBahanAlertCalc.classList.remove("show");
+    if (sApunBahanEligibleCalc) sApunBahanEligibleCalc.classList.remove("show");
+
+    if (ageInfo.age <= 53) {
+        if (sApunBahanEligibleCalc) sApunBahanEligibleCalc.classList.add("show");
+    } else if (ageInfo.age > 53 && ageInfo.age <= 60) {
+        if (sApunBahanAlertCalc) sApunBahanAlertCalc.classList.add("show");
     }
 
     const eligibility = document.getElementById("sEligibility");

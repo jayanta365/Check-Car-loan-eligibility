@@ -764,7 +764,7 @@
                             type="radio"
                             id="salaried"
                             name="applicantType"
-                            value="salaried">
+                            value="salaried" onchange="proceedApplicantType('salaried')">
 
                         <label for="salaried">
 
@@ -784,7 +784,7 @@
                             type="radio"
                             id="business"
                             name="applicantType"
-                            value="business">
+                            value="business" onchange="proceedApplicantType('business')">
 
                         <label for="business">
 
@@ -796,16 +796,6 @@
 
 
                 </div>
-
-
-                <button
-                    type="button"
-                    class="primary-btn"
-                    onclick="proceedApplicantType()">
-
-                    Proceed
-
-                </button>
 
             </div>
 
@@ -1716,6 +1706,31 @@
    FORMAT CURRENCY
 ========================================== */
 
+function setDobMaximumDate() {
+
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    const todayString = `${year}-${month}-${day}`;
+
+    const salariedDob = document.getElementById("sDob");
+    const businessDob = document.getElementById("bDob");
+
+    if (salariedDob) {
+        salariedDob.max = todayString;
+    }
+
+    if (businessDob) {
+        businessDob.max = todayString;
+    }
+}
+
+setDobMaximumDate();
+
+
 function formatCurrency(amount) {
 
     return new Intl.NumberFormat(
@@ -1791,56 +1806,40 @@ function hideError() {
    PROCEED FROM APPLICANT TYPE
 ========================================== */
 
-function proceedApplicantType() {
+function proceedApplicantType(selectedValue) {
 
     hideError();
 
+    let selected = null;
 
-    const selected =
-        document.querySelector(
+    if (selectedValue) {
+        selected = document.querySelector(
+            `input[name="applicantType"][value="${selectedValue}"]`
+        );
+    } else {
+        selected = document.querySelector(
             'input[name="applicantType"]:checked'
         );
-
-
-    if (!selected) {
-
-        showError(
-            "Please select Salaried Individual or Business Man."
-        );
-
-        return;
-
     }
 
+    if (!selected) {
+        showError("Please select Salaried Individual or Business Man.");
+        return;
+    }
 
-    /* Hide applicant selection */
-
-    document.getElementById(
-        "applicantScreen"
-    ).classList.remove("active");
-
-
-    /* Salaried */
+    document.getElementById("applicantScreen")
+        .classList.remove("active");
 
     if (selected.value === "salaried") {
 
-        document.getElementById(
-            "salariedScreen"
-        ).classList.add("active");
+        document.getElementById("salariedScreen")
+            .classList.add("active");
 
+    } else {
+
+        document.getElementById("businessIncomeScreen")
+            .classList.add("active");
     }
-
-
-    /* Business */
-
-    else {
-
-        document.getElementById(
-            "businessIncomeScreen"
-        ).classList.add("active");
-
-    }
-
 }
 
 

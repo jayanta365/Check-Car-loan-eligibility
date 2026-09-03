@@ -23,6 +23,7 @@
         body {
 
             font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
 
             background: #f3f6fa;
 
@@ -33,17 +34,12 @@
             padding: 20px;
 
         }
-
-
         .container {
-
             width: 100%;
-
             max-width: 550px;
-
             margin: 0 auto;
-
         }
+
 
 
         /* =====================================
@@ -1591,89 +1587,13 @@
 
 
 
-                <!-- EXISTING EMI -->
-
-                <div class="result-row">
-
-                    <div class="result-label">
-
-                        Total Existing CIC EMIs
-
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="bTotalExistingEmi">
-
-                        ₹0.00
-
-                    </div>
+<!-- IN-HAND -->
 
                 </div>
 
 
 
-                <!-- IN-HAND -->
-
-                <div class="result-row highlight">
-
-                    <div class="result-label">
-
-                        Calculated In-Hand Income
-
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="bInHandIncome">
-
-                        ₹0.00
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- 40% -->
-
-                <div class="result-row highlight">
-
-                    <div class="result-label">
-
-                        40% of Monthly Income
-
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="bFortyPercent">
-
-                        ₹0.00
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- DIFFERENCE -->
-
-                <div class="result-row">
-
-                    <div class="result-label">
-
-                        Difference
-
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="bDifference">
-
-                        ₹0.00
-
-                    </div>
+<!-- DIFFERENCE -->
 
                 </div>
 
@@ -2526,18 +2446,6 @@ function calculateBusinessLoan() {
 
     document.getElementById("bNewLoanEmi").textContent =
         formatCurrency(maximumPermissibleEmi);
-
-    document.getElementById("bTotalExistingEmi").textContent =
-        formatCurrency(totalExistingEmi);
-
-    document.getElementById("bInHandIncome").textContent =
-        formatCurrency(inHandIncome);
-
-    document.getElementById("bFortyPercent").textContent =
-        formatCurrency(fortyPercent);
-
-    document.getElementById("bDifference").textContent =
-        formatCurrency(difference);
 
     const eligibility = document.getElementById("bEligibility");
 

@@ -1122,34 +1122,10 @@
                 </div>
 
 
-<div class="result-row highlight">
-
-                    <div class="result-label">
-                        Calculated In-Hand Salary
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="sInHandSalary">
-                        ₹0.00
-                    </div>
-
-                </div>
+</div>
 
 
-<div class="result-row">
-
-                    <div class="result-label">
-                        Difference
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="sDifference">
-                        ₹0.00
-                    </div>
-
-                </div>
+</div>
 
 
                 <div
@@ -2185,18 +2161,6 @@ function calculateSalaried() {
 
     document.getElementById("sNewLoanEmi").textContent =
         formatCurrency(maximumPermissibleEmi);
-
-    document.getElementById("sTotalExistingEmi").textContent =
-        formatCurrency(totalExistingEmi);
-
-    document.getElementById("sInHandSalary").textContent =
-        formatCurrency(inHandSalary);
-
-    document.getElementById("sFortyPercent").textContent =
-        formatCurrency(fortyPercent);
-
-    document.getElementById("sDifference").textContent =
-        formatCurrency(difference);
 
     const eligibility = document.getElementById("sEligibility");
 

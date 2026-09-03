@@ -1092,6 +1092,11 @@
                 </div>
 
                 <div class="result-row highlight">
+                    <div class="result-label">Date of Superannuation</div>
+                    <div class="result-value" id="sSuperannuationDate">-</div>
+                </div>
+
+                <div class="result-row highlight">
                     <div class="result-label">Maximum Loan Period</div>
                     <div class="result-value" id="sResultPeriod">-</div>
                 </div>
@@ -1117,22 +1122,7 @@
                 </div>
 
 
-                <div class="result-row">
-
-                    <div class="result-label">
-                        Total Existing CIC EMIs
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="sTotalExistingEmi">
-                        ₹0.00
-                    </div>
-
-                </div>
-
-
-                <div class="result-row highlight">
+<div class="result-row highlight">
 
                     <div class="result-label">
                         Calculated In-Hand Salary
@@ -1147,22 +1137,7 @@
                 </div>
 
 
-                <div class="result-row highlight">
-
-                    <div class="result-label">
-                        40% of Gross Salary
-                    </div>
-
-                    <div
-                        class="result-value"
-                        id="sFortyPercent">
-                        ₹0.00
-                    </div>
-
-                </div>
-
-
-                <div class="result-row">
+<div class="result-row">
 
                     <div class="result-label">
                         Difference
@@ -1900,6 +1875,29 @@ function proceedApplicantType() {
    AGE / LOAN PERIOD
 ========================================== */
 
+function calculateSuperannuationDate(dob) {
+
+    if (!dob) return null;
+
+    const birthDate = new Date(dob + "T00:00:00");
+
+    if (isNaN(birthDate.getTime())) return null;
+
+    // Superannuation date = Date of Birth + 60 years - 1 day
+    const superannuationDate = new Date(
+        birthDate.getFullYear() + 60,
+        birthDate.getMonth(),
+        birthDate.getDate()
+    );
+
+    superannuationDate.setDate(
+        superannuationDate.getDate() - 1
+    );
+
+    return superannuationDate;
+}
+
+
 function getLoanPeriodFromDob(dob) {
 
     if (!dob) {
@@ -2166,6 +2164,18 @@ function calculateSalaried() {
 
     document.getElementById("sResultDob").textContent =
         formatDateForDisplay(dob);
+
+    const superannuationDate =
+        calculateSuperannuationDate(dob);
+
+    document.getElementById("sSuperannuationDate").textContent =
+        superannuationDate
+            ? new Intl.DateTimeFormat("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }).format(superannuationDate)
+            : "-";
 
     document.getElementById("sResultPeriod").textContent =
         formatLoanPeriod(ageInfo.maxMonths);

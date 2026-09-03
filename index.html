@@ -1171,7 +1171,7 @@
                 </div>
 
 
-                <div class="result-row highlight">
+                <div class="result-row highlight" id="sSuperannuationRow">
                     <div class="result-label">Date of Superannuation</div>
                     <div class="result-value" id="sSuperannuationDate">-</div>
                 </div>
@@ -1206,6 +1206,24 @@
 
                 </div>
 
+
+                <!-- SALARIED MINIMUM LOAN PERIOD OUTPUT -->
+                <div class="minimum-period-box" id="sMinimumPeriodBox" style="display:none;">
+                    <div class="box-title">Minimum Loan Period Option</div>
+                    <div class="result-row highlight">
+                        <div class="result-label">Minimum Loan Period</div>
+                        <div class="result-value" id="sMinimumLoanPeriod">-</div>
+                    </div>
+                    <div class="result-row highlight">
+                        <div class="result-label">EMI at Minimum Loan Period</div>
+                        <div class="result-value" id="sMinimumPeriodEmi">₹0.00</div>
+                    </div>
+                </div>
+
+                <div class="apun-bahan-alert" id="sApunBahanAlert">
+                    ⚠ APUN BAHAN SCHEME ALERT<br>
+                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
+                </div>
 
                 <div
                     class="eligibility"
@@ -1644,7 +1662,7 @@
                 </div>
 
                 <div class="hint" style="margin-top:10px; text-align:center;">
-                    Minimum Apun Bahan repayment period is 3 years, subject to all applicable eligibility conditions.
+                    Minimum loan period is 3 years, subject to all applicable eligibility conditions.
                 </div>
 
             </div>
@@ -2268,14 +2286,18 @@ function calculateSalaried() {
     // Salaried Individual final result only.
     const pensionerRow = document.getElementById("sPensionerRow");
     const pensionerStatus = document.getElementById("sPensionerStatus");
+    const superannuationRow = document.getElementById("sSuperannuationRow");
 
     if (pensionerRow && pensionerStatus) {
         if (ageInfo.age > 60) {
             pensionerRow.style.display = "flex";
             pensionerStatus.textContent = "PENSIONER";
+            // Do not show superannuation date for pensioners.
+            if (superannuationRow) superannuationRow.style.display = "none";
         } else {
             pensionerRow.style.display = "none";
             pensionerStatus.textContent = "-";
+            if (superannuationRow) superannuationRow.style.display = "flex";
         }
     }
 
@@ -2287,6 +2309,30 @@ function calculateSalaried() {
 
     document.getElementById("sNewLoanEmi").textContent =
         formatCurrency(maximumPermissibleEmi);
+
+    // Minimum selectable period satisfying the applicable minimum-tenure, age,
+    // and income/EMI conditions. Minimum period = 3 years (36 months).
+    const minimumLoanMonths = 36;
+    const sMinimumPeriodBox = document.getElementById("sMinimumPeriodBox");
+    const sMinimumLoanPeriod = document.getElementById("sMinimumLoanPeriod");
+    const sMinimumPeriodEmi = document.getElementById("sMinimumPeriodEmi");
+
+    if (sMinimumPeriodBox && sMinimumLoanPeriod && sMinimumPeriodEmi) {
+        sMinimumPeriodBox.style.display = "block";
+        if (ageInfo.maxMonths >= minimumLoanMonths && maximumPermissibleEmi > 0) {
+            sMinimumLoanPeriod.textContent = formatLoanPeriod(minimumLoanMonths);
+            sMinimumPeriodEmi.textContent = formatCurrency(maximumPermissibleEmi);
+        } else {
+            sMinimumLoanPeriod.textContent = "Not Available";
+            sMinimumPeriodEmi.textContent = "-";
+        }
+    }
+
+    // Apun Bahan alert applies to Salaried Individual only.
+    const sApunBahanAlert = document.getElementById("sApunBahanAlert");
+    if (sApunBahanAlert) {
+        sApunBahanAlert.classList.toggle("show", ageInfo.age > 53);
+    }
 
     const eligibility = document.getElementById("sEligibility");
 
@@ -2699,6 +2745,12 @@ function goBackToBusinessIncome() {
 
 function resetCalculator() {
 
+    const sMinimumPeriodBox = document.getElementById("sMinimumPeriodBox");
+    if (sMinimumPeriodBox) sMinimumPeriodBox.style.display = "none";
+    const sApunBahanAlert = document.getElementById("sApunBahanAlert");
+    if (sApunBahanAlert) sApunBahanAlert.classList.remove("show");
+    const resetBusinessMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
+    if (resetBusinessMinimumPeriodBox) resetBusinessMinimumPeriodBox.style.display = "none";
 
     const inputIds = [
 

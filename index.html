@@ -852,7 +852,6 @@
                     <input
                         type="date"
                         id="sDob"
-                        max="2008-09-03"
                         onchange="updateLoanPeriod('s')">
 
                     <div class="hint" id="sAgeHint">
@@ -1319,7 +1318,6 @@
                     <input
                         type="date"
                         id="bDob"
-                        max="2008-09-03"
                         onchange="updateLoanPeriod('b')">
 
                     <div class="hint" id="bAgeHint">
@@ -1988,6 +1986,54 @@ function calculatePrincipalFromEMI(emi, annualRate, months) {
 }
 
 
+function showAgeIneligibility(type, message, dob) {
+
+    const isSalaried = type === "s";
+
+    const resultsId = isSalaried
+        ? "salariedResults"
+        : "businessResults";
+
+    const eligibilityId = isSalaried
+        ? "sEligibility"
+        : "bEligibility";
+
+    const periodId = isSalaried
+        ? "sResultPeriod"
+        : "bResultPeriod";
+
+    const loanId = isSalaried
+        ? "sMaxLoanEligibility"
+        : "bMaxLoanEligibility";
+
+    const dobResultId = isSalaried
+        ? "sResultDob"
+        : "bResultDob";
+
+    document.getElementById(resultsId).style.display = "block";
+
+    if (dob && document.getElementById(dobResultId)) {
+        document.getElementById(dobResultId).textContent =
+            formatDateForDisplay(dob);
+    }
+
+    document.getElementById(periodId).textContent = "Not Eligible";
+    document.getElementById(loanId).textContent = "₹0.00";
+
+    const eligibility =
+        document.getElementById(eligibilityId);
+
+    eligibility.className = "eligibility not-eligible";
+
+    eligibility.innerHTML = `
+        ✕ CUSTOMER IS NOT ELIGIBLE
+        <div class="difference">
+            ${message}
+        </div>
+    `;
+}
+
+
 function updateLoanPeriod(type) {
 
     const dobId = type === "s" ? "sDob" : "bDob";
@@ -2008,7 +2054,8 @@ function updateLoanPeriod(type) {
 
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
-        document.getElementById(hintId).textContent = ageInfo.message;
+        document.getElementById(hintId).textContent =
+            "✕ NOT ELIGIBLE: " + ageInfo.message;
         return;
     }
 
@@ -2093,7 +2140,20 @@ function calculateSalaried() {
     const ageInfo = getLoanPeriodFromDob(dob);
 
     if (!ageInfo.valid) {
-        showError(ageInfo.message);
+
+        if (
+            dob &&
+            (
+                ageInfo.message.includes("at least 18") ||
+                ageInfo.message.includes("maximum permissible age") ||
+                ageInfo.message.includes("sufficient age")
+            )
+        ) {
+            showAgeIneligibility("s", ageInfo.message, dob);
+        } else {
+            showError(ageInfo.message);
+        }
+
         return;
     }
 
@@ -2380,7 +2440,20 @@ function calculateBusinessLoan() {
     const ageInfo = getLoanPeriodFromDob(dob);
 
     if (!ageInfo.valid) {
-        showError(ageInfo.message);
+
+        if (
+            dob &&
+            (
+                ageInfo.message.includes("at least 18") ||
+                ageInfo.message.includes("maximum permissible age") ||
+                ageInfo.message.includes("sufficient age")
+            )
+        ) {
+            showAgeIneligibility("b", ageInfo.message, dob);
+        } else {
+            showError(ageInfo.message);
+        }
+
         return;
     }
 
@@ -2634,6 +2707,17 @@ function resetCalculator() {
         "applicantScreen"
     ).classList.add("active");
 
+
+
+    /* Reset calculated maximum loan-period displays */
+
+    document.getElementById(
+        "sMaxPeriodRow"
+    ).style.display = "none";
+
+    document.getElementById(
+        "bMaxPeriodRow"
+    ).style.display = "none";
 
 
     /* Hide results */

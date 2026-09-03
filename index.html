@@ -229,6 +229,21 @@
         }
 
 
+        input[type="date"] {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+        }
+
+        input[type="date"]:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
         input[type="number"] {
 
             width: 100%;
@@ -820,6 +835,42 @@
 
 
 
+            <!-- DATE OF BIRTH -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    Customer Age Details
+                </div>
+
+                <div class="input-group">
+
+                    <label for="sDob">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="sDob"
+                        max="2008-09-03"
+                        onchange="updateLoanPeriod('s')">
+
+                    <div class="hint" id="sAgeHint">
+                        Minimum age: 18 years. Maximum loan maturity age: 70 years.
+                    </div>
+
+                </div>
+
+                <div class="result-row highlight" id="sMaxPeriodRow" style="display:none;">
+                    <div class="result-label">
+                        Maximum Loan Period
+                    </div>
+                    <div class="result-value" id="sMaxPeriod">-</div>
+                </div>
+
+            </div>
+
+
             <!-- SALARY DETAILS -->
 
             <div class="section">
@@ -972,36 +1023,13 @@
             <div class="section">
 
                 <div class="section-title">
-
                     Proposed Car Loan Details
-
                 </div>
-
-
-                <div class="input-group">
-
-                    <label for="sLoanAmount">
-
-                        Car Loan Amount (₹)
-
-                    </label>
-
-                    <input
-                        type="number"
-                        id="sLoanAmount"
-                        min="0"
-                        step="1000"
-                        placeholder="Enter car loan amount">
-
-                </div>
-
 
                 <div class="input-group">
 
                     <label for="sInterestRate">
-
                         Car Loan Interest Rate per Annum (%)
-
                     </label>
 
                     <input
@@ -1011,35 +1039,14 @@
                         step="0.01"
                         placeholder="Enter annual interest rate">
 
-                </div>
-
-
-                <div class="input-group">
-
-                    <label for="sLoanTenure">
-
-                        Loan Tenure (Months)
-
-                    </label>
-
-                    <input
-                        type="number"
-                        id="sLoanTenure"
-                        min="1"
-                        step="1"
-                        placeholder="Enter loan tenure in months">
-
                     <div class="hint">
-
-                        EMI is calculated using the
-                        reducing-balance method.
-
+                        Maximum loan period is calculated automatically from Date of Birth,
+                        subject to the maximum age of 70 years and product maximum of 7 years.
                     </div>
 
                 </div>
 
             </div>
-
 
 
             <!-- BUTTONS -->
@@ -1076,6 +1083,22 @@
 
                 <div class="section-title">
                     Calculation Result
+                </div>
+
+
+                <div class="result-row">
+                    <div class="result-label">Date of Birth</div>
+                    <div class="result-value" id="sResultDob">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Maximum Loan Period</div>
+                    <div class="result-value" id="sResultPeriod">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Maximum Loan Eligibility</div>
+                    <div class="result-value" id="sMaxLoanEligibility">₹0.00</div>
                 </div>
 
 
@@ -1328,6 +1351,42 @@
 
 
 
+            <!-- DATE OF BIRTH -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    Customer Age Details
+                </div>
+
+                <div class="input-group">
+
+                    <label for="bDob">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="bDob"
+                        max="2008-09-03"
+                        onchange="updateLoanPeriod('b')">
+
+                    <div class="hint" id="bAgeHint">
+                        Minimum age: 18 years. Maximum loan maturity age: 70 years.
+                    </div>
+
+                </div>
+
+                <div class="result-row highlight" id="bMaxPeriodRow" style="display:none;">
+                    <div class="result-label">
+                        Maximum Loan Period
+                    </div>
+                    <div class="result-value" id="bMaxPeriod">-</div>
+                </div>
+
+            </div>
+
+
             <!-- BUSINESS INCOME RESULT -->
 
             <div class="section">
@@ -1479,36 +1538,13 @@
             <div class="section">
 
                 <div class="section-title">
-
                     Proposed Car Loan Details
-
                 </div>
-
-
-                <div class="input-group">
-
-                    <label for="bLoanAmount">
-
-                        Car Loan Amount (₹)
-
-                    </label>
-
-                    <input
-                        type="number"
-                        id="bLoanAmount"
-                        min="0"
-                        step="1000"
-                        placeholder="Enter car loan amount">
-
-                </div>
-
 
                 <div class="input-group">
 
                     <label for="bInterestRate">
-
                         Car Loan Interest Rate per Annum (%)
-
                     </label>
 
                     <input
@@ -1518,35 +1554,14 @@
                         step="0.01"
                         placeholder="Enter annual interest rate">
 
-                </div>
-
-
-                <div class="input-group">
-
-                    <label for="bLoanTenure">
-
-                        Loan Tenure (Months)
-
-                    </label>
-
-                    <input
-                        type="number"
-                        id="bLoanTenure"
-                        min="1"
-                        step="1"
-                        placeholder="Enter loan tenure in months">
-
                     <div class="hint">
-
-                        EMI is calculated using the
-                        reducing-balance method.
-
+                        Maximum loan period is calculated automatically from Date of Birth,
+                        subject to the maximum age of 70 years and product maximum of 7 years.
                     </div>
 
                 </div>
 
             </div>
-
 
 
             <!-- BUTTONS -->
@@ -1589,6 +1604,22 @@
 
                 </div>
 
+
+
+                <div class="result-row">
+                    <div class="result-label">Date of Birth</div>
+                    <div class="result-value" id="bResultDob">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Maximum Loan Period</div>
+                    <div class="result-value" id="bResultPeriod">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Maximum Loan Eligibility</div>
+                    <div class="result-value" id="bMaxLoanEligibility">₹0.00</div>
+                </div>
 
 
                 <!-- NEW CAR EMI -->
@@ -1866,6 +1897,162 @@ function proceedApplicantType() {
 
 
 /* ==========================================
+   AGE / LOAN PERIOD
+========================================== */
+
+function getLoanPeriodFromDob(dob) {
+
+    if (!dob) {
+        return { valid: false, message: "Please enter the customer's Date of Birth." };
+    }
+
+    const birthDate = new Date(dob + "T00:00:00");
+    const today = new Date();
+
+    if (isNaN(birthDate.getTime()) || birthDate > today) {
+        return { valid: false, message: "Please enter a valid Date of Birth." };
+    }
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const birthdayThisYear = new Date(
+        today.getFullYear(),
+        birthDate.getMonth(),
+        birthDate.getDate()
+    );
+
+    if (birthdayThisYear > today) age--;
+
+    if (age < 18) {
+        return { valid: false, message: "Customer must be at least 18 years old." };
+    }
+
+    if (age >= 70) {
+        return {
+            valid: false,
+            message: "Customer is not eligible because the maximum permissible age is 70 years."
+        };
+    }
+
+    const dateAt70 = new Date(
+        birthDate.getFullYear() + 70,
+        birthDate.getMonth(),
+        birthDate.getDate()
+    );
+
+    let monthsRemaining =
+        (dateAt70.getFullYear() - today.getFullYear()) * 12 +
+        (dateAt70.getMonth() - today.getMonth());
+
+    if (dateAt70.getDate() < today.getDate()) monthsRemaining--;
+
+    monthsRemaining = Math.max(0, monthsRemaining);
+
+    // Product maximum tenure = 7 years = 84 months.
+    const maxMonths = Math.min(monthsRemaining, 84);
+
+    return {
+        valid: maxMonths > 0,
+        maxMonths: maxMonths,
+        age: age,
+        message: maxMonths > 0
+            ? ""
+            : "Customer does not have sufficient age remaining for a loan."
+    };
+}
+
+
+function formatLoanPeriod(months) {
+
+    if (!months || months <= 0) return "-";
+
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+
+    if (remainingMonths === 0) {
+        return `${years} year${years === 1 ? "" : "s"} (${months} months)`;
+    }
+
+    return `${years} year${years === 1 ? "" : "s"} ${remainingMonths} month${remainingMonths === 1 ? "" : "s"} (${months} months)`;
+}
+
+
+function formatDateForDisplay(value) {
+
+    if (!value) return "-";
+
+    const date = new Date(value + "T00:00:00");
+
+    if (isNaN(date.getTime())) return value;
+
+    return new Intl.DateTimeFormat("en-IN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    }).format(date);
+}
+
+
+/*
+   Reverse EMI calculation:
+   Finds the maximum principal for a given permissible EMI,
+   interest rate and automatically calculated loan period.
+*/
+function calculatePrincipalFromEMI(emi, annualRate, months) {
+
+    if (emi <= 0 || months <= 0) return 0;
+
+    const monthlyRate = annualRate / 12 / 100;
+
+    if (monthlyRate === 0) {
+        return emi * months;
+    }
+
+    const factor = Math.pow(1 + monthlyRate, months);
+
+    return emi * (factor - 1) / (monthlyRate * factor);
+}
+
+
+function updateLoanPeriod(type) {
+
+    const dobId = type === "s" ? "sDob" : "bDob";
+    const rowId = type === "s" ? "sMaxPeriodRow" : "bMaxPeriodRow";
+    const valueId = type === "s" ? "sMaxPeriod" : "bMaxPeriod";
+    const hintId = type === "s" ? "sAgeHint" : "bAgeHint";
+
+    const dob = document.getElementById(dobId).value;
+
+    if (!dob) {
+        document.getElementById(rowId).style.display = "none";
+        document.getElementById(hintId).textContent =
+            "Minimum age: 18 years. Maximum loan maturity age: 70 years.";
+        return;
+    }
+
+    const ageInfo = getLoanPeriodFromDob(dob);
+
+    if (!ageInfo.valid) {
+        document.getElementById(rowId).style.display = "none";
+        document.getElementById(hintId).textContent = ageInfo.message;
+        return;
+    }
+
+    document.getElementById(rowId).style.display = "flex";
+    document.getElementById(valueId).textContent =
+        formatLoanPeriod(ageInfo.maxMonths);
+
+    if (ageInfo.maxMonths === 84) {
+        document.getElementById(hintId).textContent =
+            "Maximum loan period: 7 years, subject to other eligibility criteria.";
+    } else {
+        document.getElementById(hintId).textContent =
+            "Loan period is restricted by the customer's age and cannot extend beyond age 70.";
+    }
+}
+
+
+/* ==========================================
    EMI CALCULATION
    REDUCING BALANCE
 ========================================== */
@@ -1918,282 +2105,120 @@ function calculateSalaried() {
 
     hideError();
 
+    const dob = document.getElementById("sDob").value;
+    const grossSalary = getNumber("grossSalary");
+    const salaryDeduction = getNumber("salaryDeduction");
 
-    const grossSalary =
-        getNumber("grossSalary");
+    const emi1 = getNumber("sEmi1");
+    const emi2 = getNumber("sEmi2");
+    const emi3 = getNumber("sEmi3");
+    const emi4 = getNumber("sEmi4");
+    const emi5 = getNumber("sEmi5");
 
+    const interestRate = getNumber("sInterestRate");
+    const ageInfo = getLoanPeriodFromDob(dob);
 
-    const salaryDeduction =
-        getNumber("salaryDeduction");
-
-
-    const emi1 =
-        getNumber("sEmi1");
-
-
-    const emi2 =
-        getNumber("sEmi2");
-
-
-    const emi3 =
-        getNumber("sEmi3");
-
-
-    const emi4 =
-        getNumber("sEmi4");
-
-
-    const emi5 =
-        getNumber("sEmi5");
-
-
-    const loanAmount =
-        getNumber("sLoanAmount");
-
-
-    const interestRate =
-        getNumber("sInterestRate");
-
-
-    const loanTenure =
-        getNumber("sLoanTenure");
-
-
-
-    /* =====================================
-       VALIDATION
-    ===================================== */
+    if (!ageInfo.valid) {
+        showError(ageInfo.message);
+        return;
+    }
 
     if (grossSalary <= 0) {
-
-        showError(
-            "Please enter a valid Gross Salary."
-        );
-
+        showError("Please enter a valid Gross Salary.");
         return;
-
     }
-
 
     if (salaryDeduction < 0) {
-
-        showError(
-            "Salary deductions cannot be negative."
-        );
-
+        showError("Salary deductions cannot be negative.");
         return;
-
     }
 
-
-    if (
-        emi1 < 0 ||
-        emi2 < 0 ||
-        emi3 < 0 ||
-        emi4 < 0 ||
-        emi5 < 0
-    ) {
-
-        showError(
-            "EMI amounts cannot be negative."
-        );
-
+    if (emi1 < 0 || emi2 < 0 || emi3 < 0 || emi4 < 0 || emi5 < 0) {
+        showError("EMI amounts cannot be negative.");
         return;
-
     }
-
-
-    if (loanAmount <= 0) {
-
-        showError(
-            "Please enter a valid Car Loan Amount."
-        );
-
-        return;
-
-    }
-
 
     if (interestRate < 0) {
-
-        showError(
-            "Interest rate cannot be negative."
-        );
-
+        showError("Interest rate cannot be negative.");
         return;
-
     }
 
+    const totalExistingEmi = emi1 + emi2 + emi3 + emi4 + emi5;
+    const fortyPercent = grossSalary * 0.40;
 
-    if (loanTenure <= 0) {
+    // Preserve the existing rule: in-hand salary must be >= 40% of gross.
+    // Hence this is the maximum EMI available for the new car loan.
+    const maximumPermissibleEmi =
+        grossSalary - salaryDeduction - totalExistingEmi - fortyPercent;
 
-        showError(
-            "Please enter a valid Loan Tenure in months."
-        );
-
-        return;
-
-    }
-
-
-
-    /* =====================================
-       EXISTING EMIs
-    ===================================== */
-
-    const totalExistingEmi =
-        emi1 +
-        emi2 +
-        emi3 +
-        emi4 +
-        emi5;
-
-
-
-    /* =====================================
-       NEW CAR LOAN EMI
-    ===================================== */
-
-    const newLoanEmi =
-        calculateEMI(
-            loanAmount,
+    const maxLoanEligibility = maximumPermissibleEmi > 0
+        ? calculatePrincipalFromEMI(
+            maximumPermissibleEmi,
             interestRate,
-            loanTenure
-        );
-
-
-
-    /* =====================================
-       IN-HAND SALARY
-    ===================================== */
+            ageInfo.maxMonths
+        )
+        : 0;
 
     const inHandSalary =
-        grossSalary -
-        salaryDeduction -
-        totalExistingEmi -
-        newLoanEmi;
+        grossSalary - salaryDeduction - totalExistingEmi - maximumPermissibleEmi;
 
+    const difference = inHandSalary - fortyPercent;
 
+    document.getElementById("sResultDob").textContent =
+        formatDateForDisplay(dob);
 
-    /* =====================================
-       40% OF GROSS
-    ===================================== */
+    document.getElementById("sResultPeriod").textContent =
+        formatLoanPeriod(ageInfo.maxMonths);
 
-    const fortyPercent =
-        grossSalary * 0.40;
+    document.getElementById("sMaxLoanEligibility").textContent =
+        formatCurrency(maxLoanEligibility);
 
+    document.getElementById("sNewLoanEmi").textContent =
+        formatCurrency(maximumPermissibleEmi);
 
-
-    /* =====================================
-       DIFFERENCE
-    ===================================== */
-
-    const difference =
-        inHandSalary -
-        fortyPercent;
-
-
-
-    /* =====================================
-       DISPLAY
-    ===================================== */
-
-    document.getElementById(
-        "sNewLoanEmi"
-    ).textContent =
-        formatCurrency(newLoanEmi);
-
-
-    document.getElementById(
-        "sTotalExistingEmi"
-    ).textContent =
+    document.getElementById("sTotalExistingEmi").textContent =
         formatCurrency(totalExistingEmi);
 
-
-    document.getElementById(
-        "sInHandSalary"
-    ).textContent =
+    document.getElementById("sInHandSalary").textContent =
         formatCurrency(inHandSalary);
 
-
-    document.getElementById(
-        "sFortyPercent"
-    ).textContent =
+    document.getElementById("sFortyPercent").textContent =
         formatCurrency(fortyPercent);
 
-
-    document.getElementById(
-        "sDifference"
-    ).textContent =
+    document.getElementById("sDifference").textContent =
         formatCurrency(difference);
 
+    const eligibility = document.getElementById("sEligibility");
 
+    if (maximumPermissibleEmi > 0 && maxLoanEligibility > 0) {
 
-    /* =====================================
-       ELIGIBILITY
-    ===================================== */
+        eligibility.className = "eligibility eligible";
 
-    const eligibility =
-        document.getElementById(
-            "sEligibility"
-        );
-
-
-    if (
-        inHandSalary >=
-        fortyPercent
-    ) {
-
-
-        eligibility.className =
-            "eligibility eligible";
-
-
-        eligibility.innerHTML =
-            `
+        eligibility.innerHTML = `
             ✓ CUSTOMER IS ELIGIBLE
-
             <div class="difference">
-
-                In-hand salary is equal to or
-                greater than 40% of gross salary.
-
+                Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
+                based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
             </div>
-            `;
+        `;
 
-    }
+    } else {
 
+        eligibility.className = "eligibility not-eligible";
 
-    else {
-
-
-        eligibility.className =
-            "eligibility not-eligible";
-
-
-        eligibility.innerHTML =
-            `
+        eligibility.innerHTML = `
             ✕ CUSTOMER IS NOT ELIGIBLE
-
             <div class="difference">
-
-                In-hand salary is below 40%
-                of gross salary.
-
+                Existing deductions and EMIs leave no permissible amount
+                for a new car-loan EMI under the 40% income criterion.
             </div>
-            `;
-
+        `;
     }
 
-
-    /* SHOW RESULTS */
-
-    document.getElementById(
-        "salariedResults"
-    ).style.display =
-        "block";
-
+    document.getElementById("salariedResults").style.display = "block";
 }
+
+
 
 
 
@@ -2368,271 +2393,113 @@ function calculateBusinessLoan() {
 
     hideError();
 
+    const monthlyIncome = window.businessMonthlyIncome || 0;
+    const dob = document.getElementById("bDob").value;
 
-    const monthlyIncome =
-        window.businessMonthlyIncome || 0;
+    const emi1 = getNumber("bEmi1");
+    const emi2 = getNumber("bEmi2");
+    const emi3 = getNumber("bEmi3");
+    const emi4 = getNumber("bEmi4");
+    const emi5 = getNumber("bEmi5");
 
+    const interestRate = getNumber("bInterestRate");
+    const ageInfo = getLoanPeriodFromDob(dob);
 
-    const emi1 =
-        getNumber("bEmi1");
-
-
-    const emi2 =
-        getNumber("bEmi2");
-
-
-    const emi3 =
-        getNumber("bEmi3");
-
-
-    const emi4 =
-        getNumber("bEmi4");
-
-
-    const emi5 =
-        getNumber("bEmi5");
-
-
-    const loanAmount =
-        getNumber("bLoanAmount");
-
-
-    const interestRate =
-        getNumber("bInterestRate");
-
-
-    const loanTenure =
-        getNumber("bLoanTenure");
-
-
-
-    /* =====================================
-       VALIDATION
-    ===================================== */
+    if (!ageInfo.valid) {
+        showError(ageInfo.message);
+        return;
+    }
 
     if (monthlyIncome <= 0) {
-
-        showError(
-            "Please complete the business income assessment first."
-        );
-
+        showError("Please complete the business income assessment first.");
         return;
-
     }
 
-
-    if (
-        emi1 < 0 ||
-        emi2 < 0 ||
-        emi3 < 0 ||
-        emi4 < 0 ||
-        emi5 < 0
-    ) {
-
-        showError(
-            "EMI amounts cannot be negative."
-        );
-
+    if (emi1 < 0 || emi2 < 0 || emi3 < 0 || emi4 < 0 || emi5 < 0) {
+        showError("EMI amounts cannot be negative.");
         return;
-
     }
-
-
-    if (loanAmount <= 0) {
-
-        showError(
-            "Please enter a valid Car Loan Amount."
-        );
-
-        return;
-
-    }
-
 
     if (interestRate < 0) {
-
-        showError(
-            "Interest rate cannot be negative."
-        );
-
+        showError("Interest rate cannot be negative.");
         return;
-
     }
 
+    const totalExistingEmi = emi1 + emi2 + emi3 + emi4 + emi5;
+    const fortyPercent = monthlyIncome * 0.40;
 
-    if (loanTenure <= 0) {
+    // Preserve the existing rule: in-hand income must be >= 40% of monthly income.
+    const maximumPermissibleEmi =
+        monthlyIncome - totalExistingEmi - fortyPercent;
 
-        showError(
-            "Please enter a valid Loan Tenure in months."
-        );
-
-        return;
-
-    }
-
-
-
-    /* =====================================
-       EXISTING CIC EMIs
-    ===================================== */
-
-    const totalExistingEmi =
-        emi1 +
-        emi2 +
-        emi3 +
-        emi4 +
-        emi5;
-
-
-
-    /* =====================================
-       NEW CAR LOAN EMI
-    ===================================== */
-
-    const newLoanEmi =
-        calculateEMI(
-            loanAmount,
+    const maxLoanEligibility = maximumPermissibleEmi > 0
+        ? calculatePrincipalFromEMI(
+            maximumPermissibleEmi,
             interestRate,
-            loanTenure
-        );
-
-
-
-    /* =====================================
-       IN-HAND MONTHLY INCOME
-
-       Monthly Income
-       - Existing CIC EMIs
-       - New Car Loan EMI
-    ===================================== */
+            ageInfo.maxMonths
+        )
+        : 0;
 
     const inHandIncome =
-        monthlyIncome -
-        totalExistingEmi -
-        newLoanEmi;
+        monthlyIncome - totalExistingEmi - maximumPermissibleEmi;
 
+    const difference = inHandIncome - fortyPercent;
 
+    document.getElementById("bResultDob").textContent =
+        formatDateForDisplay(dob);
 
-    /* =====================================
-       40% OF MONTHLY INCOME
-    ===================================== */
+    document.getElementById("bResultPeriod").textContent =
+        formatLoanPeriod(ageInfo.maxMonths);
 
-    const fortyPercent =
-        monthlyIncome * 0.40;
+    document.getElementById("bMaxLoanEligibility").textContent =
+        formatCurrency(maxLoanEligibility);
 
+    document.getElementById("bNewLoanEmi").textContent =
+        formatCurrency(maximumPermissibleEmi);
 
-
-    /* =====================================
-       DIFFERENCE
-    ===================================== */
-
-    const difference =
-        inHandIncome -
-        fortyPercent;
-
-
-
-    /* =====================================
-       DISPLAY RESULTS
-    ===================================== */
-
-    document.getElementById(
-        "bNewLoanEmi"
-    ).textContent =
-        formatCurrency(newLoanEmi);
-
-
-    document.getElementById(
-        "bTotalExistingEmi"
-    ).textContent =
+    document.getElementById("bTotalExistingEmi").textContent =
         formatCurrency(totalExistingEmi);
 
-
-    document.getElementById(
-        "bInHandIncome"
-    ).textContent =
+    document.getElementById("bInHandIncome").textContent =
         formatCurrency(inHandIncome);
 
-
-    document.getElementById(
-        "bFortyPercent"
-    ).textContent =
+    document.getElementById("bFortyPercent").textContent =
         formatCurrency(fortyPercent);
 
-
-    document.getElementById(
-        "bDifference"
-    ).textContent =
+    document.getElementById("bDifference").textContent =
         formatCurrency(difference);
 
+    const eligibility = document.getElementById("bEligibility");
 
+    if (maximumPermissibleEmi > 0 && maxLoanEligibility > 0) {
 
-    /* =====================================
-       ELIGIBILITY
-    ===================================== */
+        eligibility.className = "eligibility eligible";
 
-    const eligibility =
-        document.getElementById(
-            "bEligibility"
-        );
-
-
-    if (
-        inHandIncome >=
-        fortyPercent
-    ) {
-
-
-        eligibility.className =
-            "eligibility eligible";
-
-
-        eligibility.innerHTML =
-            `
+        eligibility.innerHTML = `
             ✓ CUSTOMER IS ELIGIBLE
-
             <div class="difference">
-
-                In-hand income is equal to or
-                greater than 40% of monthly income.
-
+                Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
+                based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
             </div>
-            `;
+        `;
 
-    }
+    } else {
 
+        eligibility.className = "eligibility not-eligible";
 
-    else {
-
-
-        eligibility.className =
-            "eligibility not-eligible";
-
-
-        eligibility.innerHTML =
-            `
+        eligibility.innerHTML = `
             ✕ CUSTOMER IS NOT ELIGIBLE
-
             <div class="difference">
-
-                In-hand income is below 40%
-                of monthly income.
-
+                Existing EMIs leave no permissible amount
+                for a new car-loan EMI under the 40% income criterion.
             </div>
-            `;
-
+        `;
     }
 
-
-
-    /* SHOW RESULTS */
-
-    document.getElementById(
-        "businessResults"
-    ).style.display =
-        "block";
-
+    document.getElementById("businessResults").style.display = "block";
 }
+
+
 
 
 
@@ -2705,6 +2572,8 @@ function resetCalculator() {
 
     const inputIds = [
 
+        "sDob",
+
         "grossSalary",
 
         "salaryDeduction",
@@ -2719,15 +2588,13 @@ function resetCalculator() {
 
         "sEmi5",
 
-        "sLoanAmount",
-
         "sInterestRate",
-
-        "sLoanTenure",
 
         "fy202425",
 
         "fy202526",
+
+        "bDob",
 
         "bEmi1",
 
@@ -2739,11 +2606,9 @@ function resetCalculator() {
 
         "bEmi5",
 
-        "bLoanAmount",
-
         "bInterestRate",
 
-        "bLoanTenure"
+        "bInterestRate"
 
     ];
 

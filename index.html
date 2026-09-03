@@ -1639,27 +1639,7 @@
 
             <!-- MINIMUM LOAN PERIOD OUTPUT -->
 
-            <div class="minimum-period-box" id="bMinimumPeriodBox" style="display:none;">
-
-                <div class="box-title">
-                    Minimum Loan Period Option
-                </div>
-
-                <div class="result-row highlight">
-                    <div class="result-label">Minimum Loan Period</div>
-                    <div class="result-value" id="bMinimumLoanPeriod">-</div>
-                </div>
-
-                <div class="result-row highlight">
-                    <div class="result-label">EMI at Minimum Loan Period</div>
-                    <div class="result-value" id="bMinimumPeriodEmi">₹0.00</div>
-                </div>
-
-                <div class="hint" style="margin-top:10px; text-align:center;">
-                    Minimum loan period is 3 years, subject to all applicable eligibility conditions.
-                </div>
-
-            </div>
+            
 
 
             <!-- BUSINESS RESULTS -->
@@ -1703,6 +1683,28 @@
 
                 </div>
 
+
+            </div>
+
+<div class="minimum-period-box" id="bMinimumPeriodBox" style="display:none;">
+
+                <div class="box-title">
+                    Minimum Loan Period Option
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">Minimum Loan Period</div>
+                    <div class="result-value" id="bMinimumLoanPeriod">-</div>
+                </div>
+
+                <div class="result-row highlight">
+                    <div class="result-label">EMI at Minimum Loan Period</div>
+                    <div class="result-value" id="bMinimumPeriodEmi">₹0.00</div>
+                </div>
+
+                <div class="hint" style="margin-top:10px; text-align:center;">
+                    Minimum loan period is 3 years, subject to all applicable eligibility conditions.
+                </div>
 
             </div>
 
@@ -2089,6 +2091,20 @@ function updateLoanPeriod(type) {
     }
 
     const ageInfo = getLoanPeriodFromDob(dob);
+
+    // Apun Bahan alert is ONLY for Salaried Individual.
+    // Show it immediately after DOB entry when age is above 53.
+    // Pensioners (above 60) must not receive this alert.
+    if (type === "s") {
+        const sApunBahanAlert = document.getElementById("sApunBahanAlert");
+        if (sApunBahanAlert) {
+            sApunBahanAlert.classList.toggle(
+                "show",
+                ageInfo.age !== undefined &&
+                ageInfo.age > 53 && ageInfo.age <= 60
+            );
+        }
+    }
 
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
@@ -2549,12 +2565,6 @@ function calculateBusinessLoan() {
 
     hideError();
 
-    // Business Man applicants must NEVER display an Apun Bahan alert.
-    const bApunBahanAlert = document.getElementById("bApunBahanAlert");
-    if (bApunBahanAlert) {
-        bApunBahanAlert.classList.remove("show");
-        bApunBahanAlert.style.display = "none";
-    }
 
     const monthlyIncome = window.businessMonthlyIncome || 0;
     const dob = document.getElementById("bDob").value;
@@ -2881,11 +2891,7 @@ function resetCalculator() {
     document.getElementById(
         "bMaxPeriodRow"
     ).style.display = "none";
-
-    const bApunAlert = document.getElementById("bApunBahanAlert");
-    if (bApunAlert) bApunAlert.classList.remove("show");
-
-    const bMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
+const bMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
     if (bMinimumPeriodBox) bMinimumPeriodBox.style.display = "none";
 
     /* Hide results */

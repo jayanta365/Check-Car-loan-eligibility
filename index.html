@@ -1430,13 +1430,7 @@
                     </div>
                     <div class="result-value" id="bMaxPeriod">-</div>
                 </div>
-
-                <div class="apun-bahan-alert" id="bApunBahanAlert">
-                    ⚠ APUN BAHAN SCHEME ALERT<br>
-                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
-                </div>
-
-            </div>
+</div>
 
 
             <!-- BUSINESS INCOME RESULT -->
@@ -2084,11 +2078,6 @@ function updateLoanPeriod(type) {
     if (!dob) {
         document.getElementById(rowId).style.display = "none";
 
-        if (type === "b") {
-            const apunAlert = document.getElementById("bApunBahanAlert");
-            if (apunAlert) apunAlert.classList.remove("show");
-        }
-
         const hint = document.getElementById(hintId);
 
         hint.classList.remove("age-error");
@@ -2104,11 +2093,6 @@ function updateLoanPeriod(type) {
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
 
-        if (type === "b") {
-            const apunAlert = document.getElementById("bApunBahanAlert");
-            if (apunAlert) apunAlert.classList.remove("show");
-        }
-
         const hint = document.getElementById(hintId);
 
         hint.textContent =
@@ -2122,14 +2106,6 @@ function updateLoanPeriod(type) {
     const hint = document.getElementById(hintId);
 
     hint.classList.remove("age-error");
-
-    // Apun Bahan scheme age condition: maximum 53 years.
-    if (type === "b") {
-        const apunAlert = document.getElementById("bApunBahanAlert");
-        if (apunAlert) {
-            apunAlert.classList.toggle("show", ageInfo.age > 53);
-        }
-    }
 
     document.getElementById(rowId).style.display = "flex";
     document.getElementById(valueId).textContent =
@@ -2197,6 +2173,12 @@ function calculateEMI(
 function calculateSalaried() {
 
     hideError();
+
+    // Always reset the Apun Bahan alert before evaluating the current applicant.
+    const sApunBahanAlertReset = document.getElementById("sApunBahanAlert");
+    if (sApunBahanAlertReset) {
+        sApunBahanAlertReset.classList.remove("show");
+    }
 
     const dob = document.getElementById("sDob").value;
     const grossSalary = getNumber("grossSalary");
@@ -2292,6 +2274,12 @@ function calculateSalaried() {
         if (ageInfo.age > 60) {
             pensionerRow.style.display = "flex";
             pensionerStatus.textContent = "PENSIONER";
+            // Pensioners must NEVER see the Apun Bahan alert.
+            const pensionerApunAlert = document.getElementById("sApunBahanAlert");
+            if (pensionerApunAlert) {
+                pensionerApunAlert.classList.remove("show");
+                pensionerApunAlert.style.display = "none";
+            }
             // Do not show superannuation date for pensioners.
             if (superannuationRow) superannuationRow.style.display = "none";
         } else {
@@ -2319,19 +2307,41 @@ function calculateSalaried() {
 
     if (sMinimumPeriodBox && sMinimumLoanPeriod && sMinimumPeriodEmi) {
         sMinimumPeriodBox.style.display = "block";
-        if (ageInfo.maxMonths >= minimumLoanMonths && maximumPermissibleEmi > 0) {
-            sMinimumLoanPeriod.textContent = formatLoanPeriod(minimumLoanMonths);
-            sMinimumPeriodEmi.textContent = formatCurrency(maximumPermissibleEmi);
+
+        if (ageInfo.maxMonths >= minimumLoanMonths &&
+            maximumPermissibleEmi > 0 &&
+            maxLoanEligibility > 0) {
+
+            // IMPORTANT:
+            // maxLoanEligibility is the principal eligible at the maximum tenure.
+            // For the minimum tenure, EMI must be recalculated for that SAME
+            // principal at 36 months. The maximum permissible EMI is not the
+            // minimum-tenure EMI.
+            const minimumPeriodEmi = calculateEMI(
+                maxLoanEligibility,
+                interestRate,
+                minimumLoanMonths
+            );
+
+            sMinimumLoanPeriod.textContent =
+                formatLoanPeriod(minimumLoanMonths);
+
+            sMinimumPeriodEmi.textContent =
+                formatCurrency(minimumPeriodEmi);
         } else {
             sMinimumLoanPeriod.textContent = "Not Available";
             sMinimumPeriodEmi.textContent = "-";
         }
     }
 
-    // Apun Bahan alert applies to Salaried Individual only.
+    // Apun Bahan alert applies ONLY to Salaried Individuals who are
+    // above 53 years but are NOT pensioners. Pensioners must never see it.
     const sApunBahanAlert = document.getElementById("sApunBahanAlert");
     if (sApunBahanAlert) {
-        sApunBahanAlert.classList.toggle("show", ageInfo.age > 53);
+        sApunBahanAlert.classList.toggle(
+            "show",
+            ageInfo.age > 53 && ageInfo.age <= 60
+        );
     }
 
     const eligibility = document.getElementById("sEligibility");
@@ -2539,6 +2549,13 @@ function calculateBusinessLoan() {
 
     hideError();
 
+    // Business Man applicants must NEVER display an Apun Bahan alert.
+    const bApunBahanAlert = document.getElementById("bApunBahanAlert");
+    if (bApunBahanAlert) {
+        bApunBahanAlert.classList.remove("show");
+        bApunBahanAlert.style.display = "none";
+    }
+
     const monthlyIncome = window.businessMonthlyIncome || 0;
     const dob = document.getElementById("bDob").value;
 
@@ -2622,13 +2639,24 @@ function calculateBusinessLoan() {
     const minimumPeriodEmiValue = document.getElementById("bMinimumPeriodEmi");
 
     if (minimumPeriodBox && minimumPeriodValue && minimumPeriodEmiValue) {
-        if (ageInfo.maxMonths >= minimumApunBahanMonths && maximumPermissibleEmi > 0) {
+        if (ageInfo.maxMonths >= minimumApunBahanMonths &&
+            maximumPermissibleEmi > 0 &&
+            maxLoanEligibility > 0) {
+
+            // IMPORTANT:
+            // Recalculate the EMI at 36 months for the SAME maximum eligible
+            // principal. Do not display the repayment-capacity ceiling here.
+            const minimumPeriodEmi = calculateEMI(
+                maxLoanEligibility,
+                interestRate,
+                minimumApunBahanMonths
+            );
+
             minimumPeriodBox.style.display = "block";
-            minimumPeriodValue.textContent = formatLoanPeriod(minimumApunBahanMonths);
-            // At the minimum tenure, the maximum permissible EMI remains the
-            // repayment-capacity ceiling; the corresponding eligible principal
-            // is lower than at the maximum tenure.
-            minimumPeriodEmiValue.textContent = formatCurrency(maximumPermissibleEmi);
+            minimumPeriodValue.textContent =
+                formatLoanPeriod(minimumApunBahanMonths);
+            minimumPeriodEmiValue.textContent =
+                formatCurrency(minimumPeriodEmi);
         } else {
             minimumPeriodBox.style.display = "block";
             minimumPeriodValue.textContent = "Not Available";
@@ -2910,7 +2938,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-
 </body>
 
 </html>

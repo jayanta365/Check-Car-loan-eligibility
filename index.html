@@ -984,9 +984,39 @@
             </div>
 
 
-            <!-- SALARY DETAILS -->
+            <!-- EMPLOYMENT DETAILS -->
 
             <div class="section">
+
+                <div class="section-title">
+                    Employment Details
+                </div>
+
+                <div class="input-group">
+
+                    <label for="sDoj">
+                        Date of Joining
+                    </label>
+
+                    <input
+                        type="date"
+                        id="sDoj"
+                        onchange="checkSalariedServicePeriod()">
+
+                    <div class="hint">
+                        Minimum required period of service is 3 months.
+                    </div>
+
+                </div>
+
+                <div class="immediate-ineligible" id="sServiceIneligible"></div>
+
+            </div>
+
+
+            <!-- SALARY DETAILS -->
+
+            <div class="section" id="sSalarySection">
 
                 <div class="section-title">
                     Salary Details
@@ -1220,6 +1250,11 @@
                 <div class="result-row highlight" id="sPensionerRow" style="display:none;">
                     <div class="result-label">Applicant Status</div>
                     <div class="result-value" id="sPensionerStatus">-</div>
+                </div>
+
+                <div class="result-row highlight" id="sServicePeriodRow">
+                    <div class="result-label">Period of Service</div>
+                    <div class="result-value" id="sServicePeriod">-</div>
                 </div>
 
                 <div class="result-row highlight">
@@ -1791,6 +1826,7 @@ function setDobMaximumDate() {
 
     const salariedDob = document.getElementById("sDob");
     const businessDob = document.getElementById("bDob");
+    const salariedDoj = document.getElementById("sDoj");
 
     if (salariedDob) {
         salariedDob.max = todayString;
@@ -1798,6 +1834,10 @@ function setDobMaximumDate() {
 
     if (businessDob) {
         businessDob.max = todayString;
+    }
+
+    if (salariedDoj) {
+        salariedDoj.max = todayString;
     }
 }
 
@@ -1944,6 +1984,35 @@ function calculateSuperannuationDate(dob) {
 }
 
 
+/*
+   Calculates the applicant's period of service from Date of Joining
+   to today, expressed in whole months.
+*/
+function calculateServicePeriod(doj) {
+
+    if (!doj) {
+        return { valid: false, months: 0, message: "Please enter the Date of Joining." };
+    }
+
+    const joiningDate = new Date(doj + "T00:00:00");
+    const today = new Date();
+
+    if (isNaN(joiningDate.getTime()) || joiningDate > today) {
+        return { valid: false, months: 0, message: "Please enter a valid Date of Joining." };
+    }
+
+    let months =
+        (today.getFullYear() - joiningDate.getFullYear()) * 12 +
+        (today.getMonth() - joiningDate.getMonth());
+
+    if (today.getDate() < joiningDate.getDate()) months--;
+
+    months = Math.max(0, months);
+
+    return { valid: true, months: months, message: "" };
+}
+
+
 function getLoanPeriodFromDob(dob) {
 
     if (!dob) {
@@ -2012,6 +2081,29 @@ function formatLoanPeriod(months) {
 
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
+
+    if (remainingMonths === 0) {
+        return `${years} year${years === 1 ? "" : "s"} (${months} months)`;
+    }
+
+    return `${years} year${years === 1 ? "" : "s"} ${remainingMonths} month${remainingMonths === 1 ? "" : "s"} (${months} months)`;
+}
+
+
+/*
+   Formats a period-of-service duration. Unlike formatLoanPeriod, this
+   correctly displays short periods (including 0 months) instead of "-".
+*/
+function formatServicePeriod(months) {
+
+    months = Math.max(0, months || 0);
+
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+
+    if (years === 0) {
+        return `${remainingMonths} month${remainingMonths === 1 ? "" : "s"}`;
+    }
 
     if (remainingMonths === 0) {
         return `${years} year${years === 1 ? "" : "s"} (${months} months)`;
@@ -2311,6 +2403,57 @@ if (grossSalaryField) {
     grossSalaryField.addEventListener("input", checkSalariedGrossSalary);
 }
 
+/*
+   Applicable ONLY to Salaried Individuals.
+   If the period of service (Date of Joining to today) is less than
+   3 months, the customer is immediately not eligible for the loan,
+   and every subsequent Salaried input is hidden.
+*/
+function checkSalariedServicePeriod() {
+    const dojInput = document.getElementById("sDoj");
+    const alertBox = document.getElementById("sServiceIneligible");
+    const salarySection = document.getElementById("sSalarySection");
+    const remainingSections = document.getElementById("sRemainingSections");
+
+    if (!dojInput || !alertBox || !salarySection || !remainingSections) return;
+
+    if (!dojInput.value) {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+        salarySection.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
+        return;
+    }
+
+    const serviceInfo = calculateServicePeriod(dojInput.value);
+
+    if (!serviceInfo.valid) {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+        salarySection.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
+        return;
+    }
+
+    if (serviceInfo.months < 3) {
+        alertBox.innerHTML = `
+            ✕ NOT ELIGIBLE<br>
+            Period of service is ${formatServicePeriod(serviceInfo.months)}, which is below the minimum required 3 months.<br>
+            Customer is not eligible for the car loan under this criterion.
+        `;
+        alertBox.classList.add("show");
+
+        // Hide every input field from Salary Details onward.
+        salarySection.classList.add("input-section-disabled");
+        remainingSections.classList.add("input-section-disabled");
+    } else {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+        salarySection.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
+    }
+}
+
 function calculateSalaried() {
 
     hideError();
@@ -2322,6 +2465,7 @@ function calculateSalaried() {
     }
 
     const dob = document.getElementById("sDob").value;
+    const doj = document.getElementById("sDoj").value;
     const grossSalary = getNumber("grossSalary");
     const salaryDeduction = getNumber("salaryDeduction");
 
@@ -2349,6 +2493,18 @@ function calculateSalaried() {
             showError(ageInfo.message);
         }
 
+        return;
+    }
+
+    const serviceInfo = calculateServicePeriod(doj);
+
+    if (!serviceInfo.valid) {
+        showError(serviceInfo.message);
+        return;
+    }
+
+    if (serviceInfo.months < 3) {
+        checkSalariedServicePeriod();
         return;
     }
 
@@ -2412,11 +2568,19 @@ function calculateSalaried() {
             }).format(superannuationDate)
             : "-";
 
+    // Period of Service is always shown as an output for Salaried
+    // Individuals, except for pensioners (see toggle block below).
+    const servicePeriodEl = document.getElementById("sServicePeriod");
+    if (servicePeriodEl) {
+        servicePeriodEl.textContent = formatServicePeriod(serviceInfo.months);
+    }
+
     // Applicants above 60 years are shown as PENSIONER in the
     // Salaried Individual final result only.
     const pensionerRow = document.getElementById("sPensionerRow");
     const pensionerStatus = document.getElementById("sPensionerStatus");
     const superannuationRow = document.getElementById("sSuperannuationRow");
+    const servicePeriodRow = document.getElementById("sServicePeriodRow");
 
     if (pensionerRow && pensionerStatus) {
         if (ageInfo.age > 60) {
@@ -2430,10 +2594,13 @@ function calculateSalaried() {
             }
             // Do not show superannuation date for pensioners.
             if (superannuationRow) superannuationRow.style.display = "none";
+            // Period of Service is not shown for pensioners.
+            if (servicePeriodRow) servicePeriodRow.style.display = "none";
         } else {
             pensionerRow.style.display = "none";
             pensionerStatus.textContent = "-";
             if (superannuationRow) superannuationRow.style.display = "flex";
+            if (servicePeriodRow) servicePeriodRow.style.display = "flex";
         }
     }
 
@@ -2925,11 +3092,14 @@ function goBackToBusinessIncome() {
 ========================================== */
 
 function resetImmediateAlerts() {
-    ["sAgeIneligible", "bAgeIneligible", "sGrossSalaryIneligible"].forEach(id => {
+    ["sAgeIneligible", "bAgeIneligible", "sGrossSalaryIneligible", "sServiceIneligible"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.classList.remove("show");
+        if (el) {
+            el.classList.remove("show");
+            el.innerHTML = "";
+        }
     });
-    ["sRemainingInputs", "sRemainingSections", "bRemainingInputs"].forEach(id => {
+    ["sRemainingInputs", "sRemainingSections", "bRemainingInputs", "sSalarySection"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove("input-section-disabled");
     });
@@ -2966,6 +3136,8 @@ function resetCalculator() {
     const inputIds = [
 
         "sDob",
+
+        "sDoj",
 
         "grossSalary",
 

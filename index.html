@@ -106,18 +106,6 @@
 
         }
 
-        /* Business Man calculation content uses the same contained
-           white-panel appearance as the Salaried Individual screen. */
-        .business-loan-content {
-            background: white;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .business-loan-content .section:last-of-type {
-            margin-bottom: 25px;
-        }
-
 
         .section {
 
@@ -828,6 +816,18 @@
 
         }
 
+
+        /* BUSINESS MAN — match the Salaried Individual interface */
+        #businessIncomeScreen, #businessLoanScreen { max-width: none; }
+        #businessIncomeScreen .section, #businessLoanScreen .section { margin-bottom: 25px; }
+        #businessLoanScreen .result-row:not(.highlight) { background: #f8fafc; padding: 14px; border-radius: 10px; margin-top: 5px; }
+        #businessLoanScreen .results { border-top: 1px solid #e5e7eb; padding-top: 22px; margin-top: 0; }
+        #businessLoanScreen #bEligibility { margin-top: 20px; padding: 18px; border-radius: 12px; text-align: center; font-size: 20px; font-weight: bold; }
+        #businessLoanScreen #bEligibility .result-row { font-size: initial; font-weight: normal; }
+        #businessLoanScreen #bMinimumPeriodBox { margin-top: 18px; }
+        #businessLoanScreen #bEligibilityMessage { margin-top: 20px; }
+        #businessLoanScreen #bEligibilityMessage.eligibility { margin-top: 20px; }
+
     </style>
 
 
@@ -1437,11 +1437,19 @@
             </div>
 
 
-    
+        </div>
+
+
+
+        <!-- =====================================
+             SCREEN 4
+             BUSINESS CAR LOAN ASSESSMENT
+        ====================================== -->
 
         <div
             class="screen"
             id="businessLoanScreen">
+
 
             <button
                 type="button"
@@ -1741,9 +1749,6 @@
 
                 </div>
 
-
-            </div>
-
 <div class="minimum-period-box" id="bMinimumPeriodBox" style="display:none;">
 
                 <div class="box-title">
@@ -1771,18 +1776,11 @@
 
         </div>
 
-    </div>
-
-
+        </div>
 
     </div>
 
 
-
-        <!-- =====================================
-             SCREEN 4
-             BUSINESS CAR LOAN ASSESSMENT
-        ====================================== -->
 
     <div class="footer">
 

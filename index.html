@@ -286,6 +286,15 @@
 
         }
 
+        /* When age is invalid, show ONLY the dedicated ineligibility alert. */
+        .age-ineligible-only {
+            display: none !important;
+        }
+
+        .age-ineligible-only.show {
+            display: block !important;
+        }
+
 
         .hint {
 
@@ -2056,35 +2065,85 @@ function calculatePrincipalFromEMI(emi, annualRate, months) {
 
 function showAgeIneligibility(type, message, dob) {
 
+    const dobId = type === "s" ? "sDob" : "bDob";
+    const hintId = type === "s" ? "sAgeHint" : "bAgeHint";
+    const rowId = type === "s" ? "sMaxPeriodRow" : "bMaxPeriodRow";
+    const alertId = type === "s" ? "sAgeIneligible" : "bAgeIneligible";
+
+    const hint = document.getElementById(hintId);
+    const row = document.getElementById(rowId);
+    const alertBox = document.getElementById(alertId);
+
+    // Hide the normal age hint and maximum-period row.
+    if (hint) {
+        hint.classList.remove("age-error");
+        hint.style.display = "none";
+    }
+
+    if (row) {
+        row.style.display = "none";
+    }
+
+    // Show only the dedicated NOT ELIGIBLE alert.
+    if (alertBox) {
+        alertBox.innerHTML = `✕ NOT ELIGIBLE<br>${message}`;
+        alertBox.classList.add("show");
+    }
+
     if (type === "s") {
-        const alertBox = document.getElementById("sAgeIneligible");
-        const remaining = document.getElementById("sRemainingInputs");
-        if (alertBox) {
-            alertBox.innerHTML = `✕ NOT ELIGIBLE<br>${message}`;
-            alertBox.classList.add("show");
+        // Hide the complete Salary Details section.
+        const grossSalary = document.getElementById("grossSalary");
+        const salarySection = grossSalary ? grossSalary.closest(".section") : null;
+        if (salarySection) {
+            salarySection.classList.add("age-ineligible-only");
         }
-        if (remaining) remaining.classList.add("input-section-disabled");
-        document.getElementById("sMaxPeriodRow").style.display = "none";
+
+        // Apun Bahan alert must not appear when age itself is invalid.
+        const apunAlert = document.getElementById("sApunBahanAlert");
+        if (apunAlert) {
+            apunAlert.classList.remove("show", "apun-bahan-eligible");
+        }
     } else {
-        const alertBox = document.getElementById("bAgeIneligible");
+        // Hide all remaining Business Man loan input fields/options.
         const remaining = document.getElementById("bRemainingInputs");
-        if (alertBox) {
-            alertBox.innerHTML = `✕ NOT ELIGIBLE<br>${message}`;
-            alertBox.classList.add("show");
+        if (remaining) {
+            remaining.classList.add("age-ineligible-only");
         }
-        if (remaining) remaining.classList.add("input-section-disabled");
-        document.getElementById("bMaxPeriodRow").style.display = "none";
     }
 }
 
-
 function resetImmediateIneligibility(type) {
+
     const alertId = type === "s" ? "sAgeIneligible" : "bAgeIneligible";
-    const remainingId = type === "s" ? "sRemainingInputs" : "bRemainingInputs";
     const alertBox = document.getElementById(alertId);
-    const remaining = document.getElementById(remainingId);
-    if (alertBox) alertBox.classList.remove("show");
-    if (remaining) remaining.classList.remove("input-section-disabled");
+
+    if (alertBox) {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+    }
+
+    const hintId = type === "s" ? "sAgeHint" : "bAgeHint";
+    const hint = document.getElementById(hintId);
+
+    if (hint) {
+        hint.style.display = "";
+        hint.classList.remove("age-error");
+    }
+
+    if (type === "s") {
+        const grossSalary = document.getElementById("grossSalary");
+        const salarySection = grossSalary ? grossSalary.closest(".section") : null;
+
+        if (salarySection) {
+            salarySection.classList.remove("age-ineligible-only");
+        }
+    } else {
+        const remaining = document.getElementById("bRemainingInputs");
+
+        if (remaining) {
+            remaining.classList.remove("age-ineligible-only");
+        }
+    }
 }
 
 function updateLoanPeriod(type) {
@@ -2113,12 +2172,19 @@ function updateLoanPeriod(type) {
 
     const ageInfo = getLoanPeriodFromDob(dob);
 
-    // Apun Bahan alert is ONLY for Salaried Individual.
-    // Age 53 or below: show green eligibility alert immediately.
-    // Above 53 through 60: keep the existing red alert.
-    // Pensioners (above 60) must not receive this alert.
+    if (!ageInfo.valid) {
+        document.getElementById(rowId).style.display = "none";
+
+        const hint = document.getElementById(hintId);
+
+        showAgeIneligibility(type, ageInfo.message, dob);
+        return;
+    }
+
+    // Apun Bahan alert is ONLY for Salaried Individual and only for valid ages.
     if (type === "s") {
         const sApunBahanAlert = document.getElementById("sApunBahanAlert");
+
         if (sApunBahanAlert && ageInfo.age !== undefined) {
             if (ageInfo.age <= 53) {
                 sApunBahanAlert.classList.add("show", "apun-bahan-eligible");
@@ -2137,20 +2203,6 @@ function updateLoanPeriod(type) {
                 sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
             }
         }
-    }
-
-    if (!ageInfo.valid) {
-        document.getElementById(rowId).style.display = "none";
-
-        const hint = document.getElementById(hintId);
-
-        hint.textContent =
-            "✕ NOT ELIGIBLE: " + ageInfo.message;
-
-        hint.classList.add("age-error");
-
-        showAgeIneligibility(type, ageInfo.message, dob);
-        return;
     }
 
     const hint = document.getElementById(hintId);
@@ -2864,6 +2916,18 @@ function resetImmediateAlerts() {
     ["sRemainingInputs", "bRemainingInputs"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove("input-section-disabled");
+    });
+
+    const grossSalary = document.getElementById("grossSalary");
+    const salarySection = grossSalary ? grossSalary.closest(".section") : null;
+    if (salarySection) salarySection.classList.remove("age-ineligible-only");
+
+    ["sAgeHint", "bAgeHint"].forEach(id => {
+        const hint = document.getElementById(id);
+        if (hint) {
+            hint.style.display = "";
+            hint.classList.remove("age-error");
+        }
     });
 }
 

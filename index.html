@@ -1574,43 +1574,6 @@
 
 
 
-            <!-- DATE OF BIRTH -->
-
-            <div class="section">
-
-                <div class="section-title">
-                    Customer Age Details
-                </div>
-
-                <div class="input-group">
-
-                    <label for="bDob">
-                        Date of Birth
-                    </label>
-
-                    <input
-                        type="date"
-                        id="bDob"
-                        onchange="updateLoanPeriod('b')">
-
-                    <div class="hint" id="bAgeHint">
-                        Minimum age: 18 years. Maximum loan maturity age: 70 years.
-                    </div>
-
-                </div>
-
-                <div class="result-row highlight" id="bMaxPeriodRow" style="display:none;">
-                    <div class="result-label">
-                        Maximum Loan Period
-                    </div>
-                    <div class="result-value" id="bMaxPeriod">-</div>
-                </div>
-
-                <div class="immediate-ineligible" id="bAgeIneligible"></div>
-</div>
-
-            <div id="bRemainingInputs">
-
             <!-- BUSINESS INCOME RESULT -->
 
             <div class="section">
@@ -1662,6 +1625,43 @@
             </div>
 
 
+
+            <!-- DATE OF BIRTH -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    Customer Age Details
+                </div>
+
+                <div class="input-group">
+
+                    <label for="bDob">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="bDob"
+                        onchange="updateLoanPeriod('b')">
+
+                    <div class="hint" id="bAgeHint">
+                        Minimum age: 18 years. Maximum loan maturity age: 70 years.
+                    </div>
+
+                </div>
+
+                <div class="result-row highlight" id="bMaxPeriodRow" style="display:none;">
+                    <div class="result-label">
+                        Maximum Loan Period
+                    </div>
+                    <div class="result-value" id="bMaxPeriod">-</div>
+                </div>
+
+                <div class="immediate-ineligible" id="bAgeIneligible"></div>
+</div>
+
+            <div id="bRemainingInputs">
 
             <!-- CIC EMI -->
 
@@ -1897,7 +1897,7 @@
 
     <div class="footer">
 
-        Car Loan Eligibility Calculator by Jayanta
+        Car Loan Eligibility Calculator by Jayanta Boruah
 
     </div>
 

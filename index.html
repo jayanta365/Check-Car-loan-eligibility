@@ -554,6 +554,28 @@
            APUN BAHAN ALERT
         ===================================== */
 
+        .immediate-ineligible {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.45;
+        }
+
+        .immediate-ineligible.show {
+            display: block;
+        }
+
+        .input-section-disabled {
+            display: none !important;
+        }
+
         .apun-bahan-alert {
 
             display: none;
@@ -958,6 +980,7 @@
                     </div>
                     <div class="result-value" id="sMaxPeriod">-</div>
                 </div>
+                <div class="immediate-ineligible" id="sAgeIneligible"></div>
 
             </div>
 
@@ -990,7 +1013,12 @@
 
                 </div>
 
+                <div class="immediate-ineligible" id="sGrossSalaryIneligible">
+                    ✕ NOT ELIGIBLE<br>
+                    Annual gross salary is below ₹3,00,000. Customer is not eligible for the car loan under this criterion.
+                </div>
 
+                <div id="sRemainingInputs">
 
                 <!-- SALARY DEDUCTION -->
 
@@ -1165,6 +1193,10 @@
 
             </div>
 
+
+                </div>
+
+            </div>
 
             <!-- SALARIED RESULTS -->
 
@@ -1436,8 +1468,11 @@
                     </div>
                     <div class="result-value" id="bMaxPeriod">-</div>
                 </div>
+
+                <div class="immediate-ineligible" id="bAgeIneligible"></div>
 </div>
 
+            <div id="bRemainingInputs">
 
             <!-- BUSINESS INCOME RESULT -->
 
@@ -1648,6 +1683,8 @@
             
 
 
+            </div>
+
             <!-- BUSINESS RESULTS -->
 
             <div
@@ -1685,8 +1722,6 @@
                         <div class="result-value" id="bNewLoanEmi">₹0.00</div>
                     </div>
 
-                    <div id="bEligibilityMessage"></div>
-
                 </div>
 
 
@@ -1713,6 +1748,8 @@
                 </div>
 
             </div>
+
+            <div id="bEligibilityMessage"></div>
 
         </div>
 
@@ -2019,62 +2056,40 @@ function calculatePrincipalFromEMI(emi, annualRate, months) {
 
 function showAgeIneligibility(type, message, dob) {
 
-    const isSalaried = type === "s";
-
-    const resultsId = isSalaried
-        ? "salariedResults"
-        : "businessResults";
-
-    const eligibilityId = isSalaried
-        ? "sEligibility"
-        : "bEligibility";
-
-    const periodId = isSalaried
-        ? "sResultPeriod"
-        : "bResultPeriod";
-
-    const loanId = isSalaried
-        ? "sMaxLoanEligibility"
-        : "bMaxLoanEligibility";
-
-    const dobResultId = isSalaried
-        ? "sResultDob"
-        : "bResultDob";
-
-    document.getElementById(resultsId).style.display = "block";
-
-    if (dob && document.getElementById(dobResultId)) {
-        document.getElementById(dobResultId).textContent =
-            formatDateForDisplay(dob);
-    }
-
-    document.getElementById(periodId).textContent = "Not Eligible";
-    document.getElementById(loanId).textContent = "₹0.00";
-
-    const eligibility = document.getElementById(eligibilityId);
-    eligibility.className = "eligibility not-eligible";
-
-    if (isSalaried) {
-        eligibility.innerHTML = `
-            ✕ CUSTOMER IS NOT ELIGIBLE
-            <div class="difference">${message}</div>
-        `;
-    } else {
-        // Keep all Business Man calculation rows inside .eligibility.
-        const messageBox = document.getElementById("bEligibilityMessage");
-        if (messageBox) {
-            messageBox.innerHTML = `
-                <div class="eligibility-status">
-                    ✕ CUSTOMER IS NOT ELIGIBLE
-                    <div class="difference">${message}</div>
-                </div>
-            `;
+    if (type === "s") {
+        const alertBox = document.getElementById("sAgeIneligible");
+        const remaining = document.getElementById("sRemainingInputs");
+        if (alertBox) {
+            alertBox.innerHTML = `✕ NOT ELIGIBLE<br>${message}`;
+            alertBox.classList.add("show");
         }
+        if (remaining) remaining.classList.add("input-section-disabled");
+        document.getElementById("sMaxPeriodRow").style.display = "none";
+    } else {
+        const alertBox = document.getElementById("bAgeIneligible");
+        const remaining = document.getElementById("bRemainingInputs");
+        if (alertBox) {
+            alertBox.innerHTML = `✕ NOT ELIGIBLE<br>${message}`;
+            alertBox.classList.add("show");
+        }
+        if (remaining) remaining.classList.add("input-section-disabled");
+        document.getElementById("bMaxPeriodRow").style.display = "none";
     }
 }
 
 
+function resetImmediateIneligibility(type) {
+    const alertId = type === "s" ? "sAgeIneligible" : "bAgeIneligible";
+    const remainingId = type === "s" ? "sRemainingInputs" : "bRemainingInputs";
+    const alertBox = document.getElementById(alertId);
+    const remaining = document.getElementById(remainingId);
+    if (alertBox) alertBox.classList.remove("show");
+    if (remaining) remaining.classList.remove("input-section-disabled");
+}
+
 function updateLoanPeriod(type) {
+
+    resetImmediateIneligibility(type);
 
     const dobId = type === "s" ? "sDob" : "bDob";
     const rowId = type === "s" ? "sMaxPeriodRow" : "bMaxPeriodRow";
@@ -2134,6 +2149,7 @@ function updateLoanPeriod(type) {
 
         hint.classList.add("age-error");
 
+        showAgeIneligibility(type, ageInfo.message, dob);
         return;
     }
 
@@ -2204,6 +2220,29 @@ function calculateEMI(
    SALARIED CALCULATION
 ========================================== */
 
+function checkSalariedGrossSalary() {
+    const input = document.getElementById("grossSalary");
+    const alertBox = document.getElementById("sGrossSalaryIneligible");
+    const remaining = document.getElementById("sRemainingInputs");
+
+    if (!input || !alertBox || !remaining) return;
+
+    const salary = parseFloat(input.value);
+
+    if (salary > 0 && salary < 300000) {
+        alertBox.classList.add("show");
+        remaining.classList.add("input-section-disabled");
+    } else {
+        alertBox.classList.remove("show");
+        remaining.classList.remove("input-section-disabled");
+    }
+}
+
+const grossSalaryField = document.getElementById("grossSalary");
+if (grossSalaryField) {
+    grossSalaryField.addEventListener("input", checkSalariedGrossSalary);
+}
+
 function calculateSalaried() {
 
     hideError();
@@ -2247,6 +2286,11 @@ function calculateSalaried() {
 
     if (grossSalary <= 0) {
         showError("Please enter a valid Gross Salary.");
+        return;
+    }
+
+    if (grossSalary < 300000) {
+        checkSalariedGrossSalary();
         return;
     }
 
@@ -2812,7 +2856,19 @@ function goBackToBusinessIncome() {
    RESET
 ========================================== */
 
+function resetImmediateAlerts() {
+    ["sAgeIneligible", "bAgeIneligible", "sGrossSalaryIneligible"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("show");
+    });
+    ["sRemainingInputs", "bRemainingInputs"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("input-section-disabled");
+    });
+}
+
 function resetCalculator() {
+    resetImmediateAlerts();
 
     const sMinimumPeriodBox = document.getElementById("sMinimumPeriodBox");
     if (sMinimumPeriodBox) sMinimumPeriodBox.style.display = "none";

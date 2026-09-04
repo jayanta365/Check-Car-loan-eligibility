@@ -1762,6 +1762,7 @@
 
             </div>
 
+            <!-- BUSINESS ELIGIBILITY ALERT: separate div immediately after minimum-period output -->
             <div id="bEligibilityMessage"></div>
 
         </div>
@@ -2837,9 +2838,9 @@ function calculateBusinessLoan() {
 
         if (messageBox) {
             messageBox.innerHTML = `
-                <div class="eligibility-status">
+                <div class="business-eligibility-alert eligible-alert">
                     ✓ CUSTOMER IS ELIGIBLE
-                    <div class="difference">
+                    <div class="alert-details">
                         Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
                         based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
                     </div>
@@ -2853,9 +2854,9 @@ function calculateBusinessLoan() {
 
         if (messageBox) {
             messageBox.innerHTML = `
-                <div class="eligibility-status">
+                <div class="business-eligibility-alert not-eligible-alert">
                     ✕ CUSTOMER IS NOT ELIGIBLE
-                    <div class="difference">
+                    <div class="alert-details">
                         Existing EMIs leave no permissible amount
                         for a new car-loan EMI under the 40% income criterion.
                     </div>
@@ -2967,6 +2968,9 @@ function resetCalculator() {
     if (sApunBahanAlert) sApunBahanAlert.classList.remove("show");
     const resetBusinessMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
     if (resetBusinessMinimumPeriodBox) resetBusinessMinimumPeriodBox.style.display = "none";
+
+    const resetBusinessEligibilityMessage = document.getElementById("bEligibilityMessage");
+    if (resetBusinessEligibilityMessage) resetBusinessEligibilityMessage.innerHTML = "";
 
     const inputIds = [
 

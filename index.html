@@ -1052,6 +1052,8 @@
 
 
 
+            <div id="sRemainingSections">
+
             <!-- CIC EMI -->
 
             <div class="section">
@@ -1176,6 +1178,8 @@
 
             </div>
 
+
+            </div>
 
             <!-- BUTTONS -->
 
@@ -2275,18 +2279,39 @@ function calculateEMI(
 function checkSalariedGrossSalary() {
     const input = document.getElementById("grossSalary");
     const alertBox = document.getElementById("sGrossSalaryIneligible");
-    const remaining = document.getElementById("sRemainingInputs");
+    const remainingInputs = document.getElementById("sRemainingInputs");
+    const remainingSections = document.getElementById("sRemainingSections");
 
-    if (!input || !alertBox || !remaining) return;
+    if (!input || !alertBox || !remainingInputs || !remainingSections) return;
 
-    const salary = parseFloat(input.value);
+    const monthlyGrossSalary = parseFloat(input.value);
 
-    if (salary > 0 && salary < 300000) {
+    // Gross Salary is monthly. Convert it to annual income before checking
+    // the minimum annual income requirement of ₹3,00,000.
+    const annualIncome = monthlyGrossSalary * 12;
+
+    if (
+        Number.isFinite(monthlyGrossSalary) &&
+        monthlyGrossSalary > 0 &&
+        annualIncome < 300000
+    ) {
+        alertBox.innerHTML = `
+            ✕ NOT ELIGIBLE<br>
+            Annual gross salary is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>
+            Customer is not eligible for the car loan under this criterion.
+        `;
         alertBox.classList.add("show");
-        remaining.classList.add("input-section-disabled");
+
+        // Hide every input field after Gross Salary.
+        remainingInputs.classList.add("input-section-disabled");
+        remainingSections.classList.add("input-section-disabled");
     } else {
         alertBox.classList.remove("show");
-        remaining.classList.remove("input-section-disabled");
+
+        // Restore the remaining fields when annual income is ₹3,00,000 or more,
+        // or when Gross Salary is empty/zero.
+        remainingInputs.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
     }
 }
 
@@ -2341,7 +2366,9 @@ function calculateSalaried() {
         return;
     }
 
-    if (grossSalary < 300000) {
+    const annualGrossIncome = grossSalary * 12;
+
+    if (annualGrossIncome < 300000) {
         checkSalariedGrossSalary();
         return;
     }
@@ -2913,7 +2940,7 @@ function resetImmediateAlerts() {
         const el = document.getElementById(id);
         if (el) el.classList.remove("show");
     });
-    ["sRemainingInputs", "bRemainingInputs"].forEach(id => {
+    ["sRemainingInputs", "sRemainingSections", "bRemainingInputs"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove("input-section-disabled");
     });

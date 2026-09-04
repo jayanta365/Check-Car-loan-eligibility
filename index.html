@@ -1897,7 +1897,7 @@
 
     <div class="footer">
 
-        Car Loan Eligibility Calculator by Jayanta
+        Car Loan Eligibility Calculator by Jayanta Boruah
 
     </div>
 
@@ -2364,6 +2364,8 @@ function updateLoanPeriod(type) {
         hint.textContent =
             "Minimum age: 18 years. Maximum loan maturity age: 70 years.";
 
+        if (type === "s") toggleEmploymentSectionForAge(undefined);
+
         return;
     }
 
@@ -2373,6 +2375,8 @@ function updateLoanPeriod(type) {
         document.getElementById(rowId).style.display = "none";
 
         const hint = document.getElementById(hintId);
+
+        if (type === "s") toggleEmploymentSectionForAge(undefined);
 
         showAgeIneligibility(type, ageInfo.message, dob);
         return;
@@ -2400,6 +2404,12 @@ function updateLoanPeriod(type) {
                 sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
             }
         }
+    }
+
+    // Date of Joining is not applicable once the applicant's age is
+    // above 60 (pensioner) — hide the Employment Details section.
+    if (type === "s") {
+        toggleEmploymentSectionForAge(ageInfo.age);
     }
 
     const hint = document.getElementById(hintId);
@@ -2515,6 +2525,39 @@ if (grossSalaryField) {
 
 /*
    Applicable ONLY to Salaried Individuals.
+   Date of Joining (and Period of Service) is not applicable once the
+   applicant's age is above 60 (pensioner) — hide the whole Employment
+   Details section and clear/ignore any Date of Joining state so it
+   never blocks or affects the calculation for pensioners.
+*/
+function toggleEmploymentSectionForAge(age) {
+    const employmentSection = document.getElementById("sEmploymentSection");
+    if (!employmentSection) return;
+
+    if (age !== undefined && age > 60) {
+        employmentSection.style.display = "none";
+
+        const dojInput = document.getElementById("sDoj");
+        if (dojInput) dojInput.value = "";
+
+        const alertBox = document.getElementById("sServiceIneligible");
+        if (alertBox) {
+            alertBox.classList.remove("show");
+            alertBox.innerHTML = "";
+        }
+
+        const salarySection = document.getElementById("sSalarySection");
+        if (salarySection) salarySection.classList.remove("input-section-disabled");
+
+        const remainingSections = document.getElementById("sRemainingSections");
+        if (remainingSections) remainingSections.classList.remove("input-section-disabled");
+    } else {
+        employmentSection.style.display = "";
+    }
+}
+
+/*
+   Applicable ONLY to Salaried Individuals.
    If the period of service (Date of Joining to today) is less than
    3 months, the customer is immediately not eligible for the loan,
    and every subsequent Salaried input is hidden.
@@ -2606,16 +2649,22 @@ function calculateSalaried() {
         return;
     }
 
-    const serviceInfo = calculateServicePeriod(doj);
+    const isPensioner = ageInfo.age > 60;
 
-    if (!serviceInfo.valid) {
-        showError(serviceInfo.message);
-        return;
-    }
+    let serviceInfo = { valid: true, months: 0, message: "" };
 
-    if (serviceInfo.months < 3) {
-        checkSalariedServicePeriod();
-        return;
+    if (!isPensioner) {
+        serviceInfo = calculateServicePeriod(doj);
+
+        if (!serviceInfo.valid) {
+            showError(serviceInfo.message);
+            return;
+        }
+
+        if (serviceInfo.months < 3) {
+            checkSalariedServicePeriod();
+            return;
+        }
     }
 
     if (grossSalary <= 0) {
@@ -3296,6 +3345,9 @@ function resetImmediateAlerts() {
 
 function resetCalculator() {
     resetImmediateAlerts();
+
+    const sEmploymentSection = document.getElementById("sEmploymentSection");
+    if (sEmploymentSection) sEmploymentSection.style.display = "";
 
     const sMinimumPeriodBox = document.getElementById("sMinimumPeriodBox");
     if (sMinimumPeriodBox) sMinimumPeriodBox.style.display = "none";

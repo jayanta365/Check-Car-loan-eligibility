@@ -3104,14 +3104,18 @@ function goBackToBusinessIncome() {
    customer explicitly re-submits via Next.)
 ========================================== */
 
-function hideResultsOnInputChange(fieldIds, resultId) {
+function hideResultsOnInputChange(fieldIds, resultIds) {
+    const ids = Array.isArray(resultIds) ? resultIds : [resultIds];
+
     fieldIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
 
         const hideResult = function() {
-            const result = document.getElementById(resultId);
-            if (result) result.style.display = "none";
+            ids.forEach(resultId => {
+                const result = document.getElementById(resultId);
+                if (result) result.style.display = "none";
+            });
         };
 
         el.addEventListener("input", hideResult);
@@ -3147,7 +3151,7 @@ hideResultsOnInputChange(
         "bEmi5",
         "bInterestRate"
     ],
-    "businessResults"
+    ["businessResults", "bMinimumPeriodBox", "bEligibilityMessage"]
 );
 
 

@@ -3000,6 +3000,12 @@ function calculateBusinessLoan() {
     const eligibility = document.getElementById("bEligibility");
     const messageBox = document.getElementById("bEligibilityMessage");
 
+    // Ensure the alert is visible again on every fresh calculation —
+    // it may have been hidden by an input change since the last submit.
+    if (messageBox) {
+        messageBox.style.display = "block";
+    }
+
     if (maximumPermissibleEmi > 0 && maxLoanEligibility > 0) {
 
         eligibility.className = "eligibility eligible";

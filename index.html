@@ -2837,13 +2837,12 @@ function calculateBusinessLoan() {
         eligibility.className = "eligibility eligible";
 
         if (messageBox) {
+            messageBox.className = "eligibility eligible";
             messageBox.innerHTML = `
-                <div class="business-eligibility-alert eligible-alert">
-                    ✓ CUSTOMER IS ELIGIBLE
-                    <div class="alert-details">
-                        Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
-                        based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
-                    </div>
+                ✓ CUSTOMER IS ELIGIBLE
+                <div class="difference">
+                    Maximum eligible loan is ${formatCurrency(maxLoanEligibility)}
+                    based on the maximum loan period of ${formatLoanPeriod(ageInfo.maxMonths)}.
                 </div>
             `;
         }
@@ -2853,13 +2852,12 @@ function calculateBusinessLoan() {
         eligibility.className = "eligibility not-eligible";
 
         if (messageBox) {
+            messageBox.className = "eligibility not-eligible";
             messageBox.innerHTML = `
-                <div class="business-eligibility-alert not-eligible-alert">
-                    ✕ CUSTOMER IS NOT ELIGIBLE
-                    <div class="alert-details">
-                        Existing EMIs leave no permissible amount
-                        for a new car-loan EMI under the 40% income criterion.
-                    </div>
+                ✕ CUSTOMER IS NOT ELIGIBLE
+                <div class="difference">
+                    Existing EMIs leave no permissible amount
+                    for a new car-loan EMI under the 40% income criterion.
                 </div>
             `;
         }
@@ -2970,7 +2968,10 @@ function resetCalculator() {
     if (resetBusinessMinimumPeriodBox) resetBusinessMinimumPeriodBox.style.display = "none";
 
     const resetBusinessEligibilityMessage = document.getElementById("bEligibilityMessage");
-    if (resetBusinessEligibilityMessage) resetBusinessEligibilityMessage.innerHTML = "";
+    if (resetBusinessEligibilityMessage) {
+        resetBusinessEligibilityMessage.className = "";
+        resetBusinessEligibilityMessage.innerHTML = "";
+    }
 
     const inputIds = [
 

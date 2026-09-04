@@ -106,6 +106,18 @@
 
         }
 
+        /* Business Man calculation content uses the same contained
+           white-panel appearance as the Salaried Individual screen. */
+        .business-loan-content {
+            background: white;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .business-loan-content .section:last-of-type {
+            margin-bottom: 25px;
+        }
+
 
         .section {
 
@@ -1438,6 +1450,7 @@
             class="screen"
             id="businessLoanScreen">
 
+            <div class="business-loan-content">
 
             <button
                 type="button"
@@ -1764,6 +1777,8 @@
 
             <!-- BUSINESS ELIGIBILITY ALERT: separate div immediately after minimum-period output -->
             <div id="bEligibilityMessage"></div>
+
+            </div>
 
         </div>
 

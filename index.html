@@ -986,7 +986,7 @@
 
             <!-- EMPLOYMENT DETAILS -->
 
-            <div class="section">
+            <div class="section" id="sEmploymentSection">
 
                 <div class="section-title">
                     Employment Details
@@ -2178,7 +2178,13 @@ function showAgeIneligibility(type, message, dob) {
     }
 
     if (type === "s") {
-        // Hide the complete Salary Details section.
+        // Hide the complete Employment Details section (Date of Joining)
+        // and the complete Salary Details section.
+        const employmentSection = document.getElementById("sEmploymentSection");
+        if (employmentSection) {
+            employmentSection.classList.add("age-ineligible-only");
+        }
+
         const grossSalary = document.getElementById("grossSalary");
         const salarySection = grossSalary ? grossSalary.closest(".section") : null;
         if (salarySection) {
@@ -2218,6 +2224,11 @@ function resetImmediateIneligibility(type) {
     }
 
     if (type === "s") {
+        const employmentSection = document.getElementById("sEmploymentSection");
+        if (employmentSection) {
+            employmentSection.classList.remove("age-ineligible-only");
+        }
+
         const grossSalary = document.getElementById("grossSalary");
         const salarySection = grossSalary ? grossSalary.closest(".section") : null;
 
@@ -3107,6 +3118,9 @@ function resetImmediateAlerts() {
     const grossSalary = document.getElementById("grossSalary");
     const salarySection = grossSalary ? grossSalary.closest(".section") : null;
     if (salarySection) salarySection.classList.remove("age-ineligible-only");
+
+    const employmentSection = document.getElementById("sEmploymentSection");
+    if (employmentSection) employmentSection.classList.remove("age-ineligible-only");
 
     ["sAgeHint", "bAgeHint"].forEach(id => {
         const hint = document.getElementById(id);

@@ -1798,7 +1798,7 @@
 
     <div class="footer">
 
-        Car Loan Eligibility Calculator by Jayanta Boruah, Manager (9621842)
+        Car Loan Eligibility Calculator by Jayanta Boruah
 
     </div>
 
@@ -3095,6 +3095,58 @@ function goBackToBusinessIncome() {
     ).classList.add("active");
 
 }
+
+
+
+/* ==========================================
+   HIDE RESULTS WHEN ANY INPUT CHANGES
+   (Result must only be shown again after the
+   customer explicitly re-submits via Next.)
+========================================== */
+
+function hideResultsOnInputChange(fieldIds, resultId) {
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const hideResult = function() {
+            const result = document.getElementById(resultId);
+            if (result) result.style.display = "none";
+        };
+
+        el.addEventListener("input", hideResult);
+        el.addEventListener("change", hideResult);
+    });
+}
+
+hideResultsOnInputChange(
+    [
+        "sDob",
+        "sDoj",
+        "grossSalary",
+        "salaryDeduction",
+        "sEmi1",
+        "sEmi2",
+        "sEmi3",
+        "sEmi4",
+        "sEmi5",
+        "sInterestRate"
+    ],
+    "salariedResults"
+);
+
+hideResultsOnInputChange(
+    [
+        "bDob",
+        "bEmi1",
+        "bEmi2",
+        "bEmi3",
+        "bEmi4",
+        "bEmi5",
+        "bInterestRate"
+    ],
+    "businessResults"
+);
 
 
 

@@ -33,11 +33,46 @@
 
             padding: 20px;
 
+            position: relative;
+
         }
+
+        /* =====================================
+           WATERMARK
+        ===================================== */
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 250vw;
+            height: 250vh;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap: 70px 90px;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .watermark span {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(29, 64, 175, 0.07);
+            white-space: nowrap;
+        }
+
         .container {
             width: 100%;
             max-width: 550px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
 
@@ -820,6 +855,70 @@
 
 
 <body>
+
+
+<div class="watermark" aria-hidden="true">
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+            <span>JAYANTA</span>
+</div>
 
 
 <div class="container">
@@ -1798,7 +1897,7 @@
 
     <div class="footer">
 
-        Car Loan Eligibility Calculator by Jayanta
+        Car Loan Eligibility Calculator by Jayanta Boruah
 
     </div>
 

@@ -2473,10 +2473,13 @@ function checkSalariedGrossSalary() {
     if (!input || !alertBox || !remainingInputs || !remainingSections) return;
 
     const monthlyGrossSalary = parseFloat(input.value);
+    const monthlySalaryDeduction = getNumber("salaryDeduction");
 
-    // Gross Salary is monthly. Convert it to annual income before checking
-    // the minimum annual income requirement of ₹3,00,000.
-    const annualIncome = monthlyGrossSalary * 12;
+    // For Apun Bahan Scheme, eligibility is checked on net salary after
+    // deduction as per salary sheet. For other schemes, gross salary is checked.
+    const annualIncome = currentLoanScheme === "apunBahan"
+        ? (monthlyGrossSalary - monthlySalaryDeduction) * 12
+        : monthlyGrossSalary * 12;
 
     if (
         Number.isFinite(monthlyGrossSalary) &&
@@ -2485,7 +2488,9 @@ function checkSalariedGrossSalary() {
     ) {
         alertBox.innerHTML = `
             ✕ NOT ELIGIBLE<br>
-            Annual gross salary is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>
+            ${currentLoanScheme === "apunBahan"
+                ? `Net annual income is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>`
+                : `Annual gross salary is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>`}
             Customer is not eligible for the car loan under this criterion.
         `;
         alertBox.classList.add("show");
@@ -2677,8 +2682,11 @@ function calculateSalaried() {
     }
 
     const annualGrossIncome = grossSalary * 12;
+    const annualEligibleIncome = currentLoanScheme === "apunBahan"
+        ? (grossSalary - salaryDeduction) * 12
+        : annualGrossIncome;
 
-    if (annualGrossIncome < 300000) {
+    if (annualEligibleIncome < 300000) {
         checkSalariedGrossSalary();
         return;
     }

@@ -1128,6 +1128,11 @@
 
                 </div>
 
+                <!-- APUN BAHAN NET INCOME ALERT (shown directly below the
+                     Deductions as per Salary Sheet field, not the gross
+                     salary field, and only for the Apun Bahan scheme). -->
+                <div class="immediate-ineligible" id="sApunBahanNetIncomeIneligible"></div>
+
             </div>
 
 
@@ -1263,7 +1268,7 @@
 
             <!-- BUTTONS -->
 
-            <div class="buttons">
+            <div class="buttons" id="salariedActionButtons">
 
                 <button
                     type="button"
@@ -1746,7 +1751,7 @@
 
             <!-- BUTTONS -->
 
-            <div class="buttons">
+            <div class="buttons" id="businessLoanActionButtons">
 
                 <button
                     type="button"
@@ -2264,6 +2269,29 @@ function calculatePrincipalFromEMI(emi, annualRate, months) {
 }
 
 
+/*
+   Whenever a "NOT ELIGIBLE" alert is showing on a screen, the Calculate
+   and Reset buttons for that screen must not appear. As soon as every
+   NOT ELIGIBLE alert on that screen is cleared, the buttons reappear.
+*/
+function updateActionButtonsVisibility(type) {
+
+    const buttonsId = type === "s" ? "salariedActionButtons" : "businessLoanActionButtons";
+    const buttons = document.getElementById(buttonsId);
+    if (!buttons) return;
+
+    const alertIds = type === "s"
+        ? ["sAgeIneligible", "sGrossSalaryIneligible", "sApunBahanNetIncomeIneligible"]
+        : ["bAgeIneligible"];
+
+    const anyIneligible = alertIds.some(function(id) {
+        const el = document.getElementById(id);
+        return el && el.classList.contains("show");
+    });
+
+    buttons.style.display = anyIneligible ? "none" : "";
+}
+
 function showAgeIneligibility(type, message, dob) {
 
     const dobId = type === "s" ? "sDob" : "bDob";
@@ -2311,6 +2339,8 @@ function showAgeIneligibility(type, message, dob) {
             remaining.classList.add("age-ineligible-only");
         }
     }
+
+    updateActionButtonsVisibility(type);
 }
 
 function resetImmediateIneligibility(type) {
@@ -2350,6 +2380,8 @@ function resetImmediateIneligibility(type) {
             remaining.classList.remove("age-ineligible-only");
         }
     }
+
+    updateActionButtonsVisibility(type);
 }
 
 function updateLoanPeriod(type) {
@@ -2473,13 +2505,18 @@ function checkSalariedGrossSalary() {
     if (!input || !alertBox || !remainingInputs || !remainingSections) return;
 
     const monthlyGrossSalary = parseFloat(input.value);
-    const monthlySalaryDeduction = getNumber("salaryDeduction");
 
-    // For Apun Bahan Scheme, eligibility is checked on net salary after
-    // deduction as per salary sheet. For other schemes, gross salary is checked.
-    const annualIncome = currentLoanScheme === "apunBahan"
-        ? (monthlyGrossSalary - monthlySalaryDeduction) * 12
-        : monthlyGrossSalary * 12;
+    // Apun Bahan eligibility is based on net income after salary deduction.
+    // Therefore, do not show eligibility alert while only entering gross salary.
+    if (currentLoanScheme === "apunBahan") {
+        alertBox.classList.remove("show");
+        remainingInputs.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
+        updateActionButtonsVisibility("s");
+        return;
+    }
+
+    const annualIncome = monthlyGrossSalary * 12;
 
     if (
         Number.isFinite(monthlyGrossSalary) &&
@@ -2488,29 +2525,86 @@ function checkSalariedGrossSalary() {
     ) {
         alertBox.innerHTML = `
             ✕ NOT ELIGIBLE<br>
-            ${currentLoanScheme === "apunBahan"
-                ? `Net annual income is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>`
-                : `Annual gross salary is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>`}
+            Annual gross salary is ₹${annualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>
             Customer is not eligible for the car loan under this criterion.
         `;
         alertBox.classList.add("show");
 
-        // Hide every input field after Gross Salary.
         remainingInputs.classList.add("input-section-disabled");
         remainingSections.classList.add("input-section-disabled");
     } else {
         alertBox.classList.remove("show");
-
-        // Restore the remaining fields when annual income is ₹3,00,000 or more,
-        // or when Gross Salary is empty/zero.
         remainingInputs.classList.remove("input-section-disabled");
         remainingSections.classList.remove("input-section-disabled");
     }
+
+    updateActionButtonsVisibility("s");
+}
+
+function checkApunBahanNetIncome() {
+    const alertBox = document.getElementById("sApunBahanNetIncomeIneligible");
+    const remainingInputs = document.getElementById("sRemainingInputs");
+    const remainingSections = document.getElementById("sRemainingSections");
+
+    if (!alertBox || !remainingInputs || !remainingSections) return;
+
+    const monthlyGrossSalary = parseFloat(document.getElementById("grossSalary").value);
+    const monthlySalaryDeduction = getNumber("salaryDeduction");
+
+    if (
+        !Number.isFinite(monthlyGrossSalary) ||
+        monthlyGrossSalary <= 0
+    ) {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+        remainingSections.classList.remove("input-section-disabled");
+        updateActionButtonsVisibility("s");
+        return;
+    }
+
+    const netAnnualIncome = (monthlyGrossSalary - monthlySalaryDeduction) * 12;
+
+    if (netAnnualIncome < 300000) {
+        alertBox.innerHTML = `
+            ✕ NOT ELIGIBLE<br>
+            Net annual income is ₹${netAnnualIncome.toLocaleString("en-IN")}, which is below ₹3,00,000.<br>
+            Customer is not eligible for the car loan under this criterion.
+        `;
+        alertBox.classList.add("show");
+
+        // Keep the "Deductions as per Salary Sheet" field itself visible —
+        // only hide the sections that come after it (CIC EMI / Car Loan details).
+        remainingInputs.classList.remove("input-section-disabled");
+        remainingSections.classList.add("input-section-disabled");
+    } else {
+        alertBox.classList.remove("show");
+        alertBox.innerHTML = "";
+        remainingInputs.classList.remove("input-section-disabled");
+        remainingSections.classList.remove("input-section-disabled");
+    }
+
+    updateActionButtonsVisibility("s");
 }
 
 const grossSalaryField = document.getElementById("grossSalary");
 if (grossSalaryField) {
     grossSalaryField.addEventListener("input", checkSalariedGrossSalary);
+    grossSalaryField.addEventListener("input", function() {
+        if (currentLoanScheme === "apunBahan") {
+            checkApunBahanNetIncome();
+        }
+    });
+}
+
+const salaryDeductionField = document.getElementById("salaryDeduction");
+if (salaryDeductionField) {
+    // Apun Bahan: check net annual income live, while typing the deduction
+    // amount (not only after the field loses focus).
+    salaryDeductionField.addEventListener("input", function() {
+        if (currentLoanScheme === "apunBahan") {
+            checkApunBahanNetIncome();
+        }
+    });
 }
 
 /*
@@ -3308,7 +3402,7 @@ hideResultsOnInputChange(
 ========================================== */
 
 function resetImmediateAlerts() {
-    ["sAgeIneligible", "bAgeIneligible", "sGrossSalaryIneligible", "sServiceIneligible"].forEach(id => {
+    ["sAgeIneligible", "bAgeIneligible", "sGrossSalaryIneligible", "sServiceIneligible", "sApunBahanNetIncomeIneligible"].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.classList.remove("show");
@@ -3334,6 +3428,9 @@ function resetImmediateAlerts() {
             hint.classList.remove("age-error");
         }
     });
+
+    updateActionButtonsVisibility("s");
+    updateActionButtonsVisibility("b");
 }
 
 function resetCalculator() {
@@ -3499,8 +3596,6 @@ const bMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
 
 
 </script>
-
-
 
 <script>
 if ("serviceWorker" in navigator) {

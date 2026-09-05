@@ -1064,7 +1064,7 @@
                         onchange="checkSalariedServicePeriod()">
 
                     <div class="hint">
-                        Minimum required period of service is 3 months.
+                        For AGVB Car Loan Scheme, service period less than 1 year requires checking exempted category as per circular.
                     </div>
 
                 </div>
@@ -2578,23 +2578,24 @@ function checkSalariedServicePeriod() {
         return;
     }
 
-    if (serviceInfo.months < 3) {
+    // AGVB Car Loan Scheme: Do not reject service period below 3 months.
+    // Display only an alert when service period is below 1 year.
+    // Exempted categories should be verified as per the applicable circular.
+    if (currentLoanScheme === "agvb" && serviceInfo.months < 12) {
         alertBox.innerHTML = `
-            ✕ NOT ELIGIBLE<br>
-            Period of service is ${formatServicePeriod(serviceInfo.months)}, which is below the minimum required 3 months.<br>
-            Customer is not eligible for the car loan under this criterion.
+            ⚠ ALERT<br>
+            Period of service is ${formatServicePeriod(serviceInfo.months)}, which is less than 1 year.<br>
+            Check exempted category as per circular before processing the loan application.
         `;
         alertBox.classList.add("show");
-
-        // Hide every input field from Salary Details onward.
-        salarySection.classList.add("input-section-disabled");
-        remainingSections.classList.add("input-section-disabled");
     } else {
         alertBox.classList.remove("show");
         alertBox.innerHTML = "";
-        salarySection.classList.remove("input-section-disabled");
-        remainingSections.classList.remove("input-section-disabled");
     }
+
+    // Never block salaried inputs only because service period is less than 1 year.
+    salarySection.classList.remove("input-section-disabled");
+    remainingSections.classList.remove("input-section-disabled");
 }
 
 function getApunBahanLoanPeriodFromDob(dob) {
@@ -2670,10 +2671,9 @@ function calculateSalaried() {
             return;
         }
 
-        if (serviceInfo.months < 3) {
-            checkSalariedServicePeriod();
-            return;
-        }
+        // AGVB no longer has a 3 month minimum service rejection.
+        // A less than 1 year service period is only shown as an alert.
+        checkSalariedServicePeriod();
     }
 
     if (grossSalary <= 0) {

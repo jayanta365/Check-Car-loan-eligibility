@@ -554,10 +554,6 @@
         }
 
 
-        /* =====================================
-           APUN BAHAN ALERT
-        ===================================== */
-
         .immediate-ineligible {
             display: none;
             margin-top: 16px;
@@ -579,44 +575,6 @@
         .input-section-disabled {
             display: none !important;
         }
-
-        .apun-bahan-alert {
-
-            display: none;
-
-            margin-top: 16px;
-
-            padding: 14px 16px;
-
-            border-radius: 12px;
-
-            background: #fff7ed;
-
-            color: #c2410c;
-
-            border: 1px solid #fdba74;
-
-            text-align: center;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-            line-height: 1.45;
-
-        }
-
-
-        .apun-bahan-alert.show {
-            display: block;
-        }
-
-        .apun-bahan-alert.apun-bahan-eligible {
-            background: #ecfdf5;
-            color: #047857;
-            border: 1px solid #a7f3d0;
-        }
-
 
         /* =====================================
            MINIMUM LOAN PERIOD OUTPUT
@@ -881,13 +839,92 @@
 
 
         <!-- =====================================
+             SCREEN 0
+             SELECT LOAN SCHEME
+        ====================================== -->
+
+        <div
+            class="screen active"
+            id="homeScreen">
+
+
+            <div class="section">
+
+                <div class="section-title">
+
+                    Select Loan Scheme
+
+                </div>
+
+
+                <div class="applicant-options">
+
+
+                    <!-- AGVB CAR LOAN SCHEME -->
+
+                    <div class="applicant-option">
+
+                        <input
+                            type="radio"
+                            id="agvbCarLoan"
+                            name="loanScheme"
+                            value="agvb" onchange="selectScheme('agvb')">
+
+                        <label for="agvbCarLoan">
+
+                            AGVB Car Loan Scheme
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- APUN BAHAN SCHEME -->
+
+                    <div class="applicant-option">
+
+                        <input
+                            type="radio"
+                            id="apunBahanScheme"
+                            name="loanScheme"
+                            value="apunBahan" onchange="selectScheme('apunBahan')">
+
+                        <label for="apunBahanScheme">
+
+                            Apun Bahan Scheme
+
+                        </label>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
              SCREEN 1
              SELECT APPLICANT TYPE
         ====================================== -->
 
         <div
-            class="screen active"
+            class="screen"
             id="applicantScreen">
+
+
+            <button
+                type="button"
+                class="back-button"
+                onclick="goBackToHome()">
+
+                ← Change Scheme
+
+            </button>
 
 
             <div class="section">
@@ -1317,11 +1354,6 @@
                         <div class="result-label">EMI at Minimum Loan Period</div>
                         <div class="result-value" id="sMinimumPeriodEmi">₹0.00</div>
                     </div>
-                </div>
-
-                <div class="apun-bahan-alert" id="sApunBahanAlert">
-                    ⚠ APUN BAHAN SCHEME ALERT<br>
-                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
                 </div>
 
                 <div
@@ -1833,6 +1865,8 @@
 <script>
 
 
+let currentLoanScheme = "agvb";
+
 /* ==========================================
    FORMAT CURRENCY
 ========================================== */
@@ -1941,6 +1975,63 @@ function hideError() {
 /* ==========================================
    PROCEED FROM APPLICANT TYPE
 ========================================== */
+
+/* ==========================================
+   SELECT LOAN SCHEME (HOME SCREEN)
+========================================== */
+
+function selectScheme(scheme) {
+
+    currentLoanScheme = scheme;
+
+    hideError();
+
+    if (scheme !== "agvb" && scheme !== "apunBahan") return;
+
+    document.getElementById("homeScreen")
+        .classList.remove("active");
+
+    // Apun Bahan Scheme follows the same input flow as
+    // Salaried Individual under AGVB Car Loan Scheme.
+    // Skip the applicant type selection screen.
+    if (scheme === "apunBahan") {
+
+        document.getElementById("applicantScreen")
+            .classList.remove("active");
+
+        document.getElementById("salariedScreen")
+            .classList.add("active");
+
+        const salariedRadio = document.getElementById("salaried");
+        if (salariedRadio) {
+            salariedRadio.checked = true;
+        }
+
+    } else {
+
+        document.getElementById("applicantScreen")
+            .classList.add("active");
+    }
+}
+
+function goBackToHome() {
+
+    resetCalculator();
+
+    // Hide all screens before returning to the first screen.
+    document.querySelectorAll(".screen").forEach(function(screen){
+        screen.classList.remove("active");
+    });
+
+    const agvbRadio = document.getElementById("agvbCarLoan");
+    if (agvbRadio) agvbRadio.checked = false;
+
+    const apunBahanRadio = document.getElementById("apunBahanScheme");
+    if (apunBahanRadio) apunBahanRadio.checked = false;
+
+    document.getElementById("homeScreen")
+        .classList.add("active");
+}
 
 function proceedApplicantType(selectedValue) {
 
@@ -2213,12 +2304,6 @@ function showAgeIneligibility(type, message, dob) {
         if (salarySection) {
             salarySection.classList.add("age-ineligible-only");
         }
-
-        // Apun Bahan alert must not appear when age itself is invalid.
-        const apunAlert = document.getElementById("sApunBahanAlert");
-        if (apunAlert) {
-            apunAlert.classList.remove("show", "apun-bahan-eligible");
-        }
     } else {
         // Hide all remaining Business Man loan input fields/options.
         const remaining = document.getElementById("bRemainingInputs");
@@ -2293,7 +2378,7 @@ function updateLoanPeriod(type) {
         return;
     }
 
-    const ageInfo = getLoanPeriodFromDob(dob);
+    const ageInfo = currentLoanScheme === "apunBahan" ? getApunBahanLoanPeriodFromDob(dob) : getLoanPeriodFromDob(dob);
 
     if (!ageInfo.valid) {
         document.getElementById(rowId).style.display = "none";
@@ -2304,30 +2389,6 @@ function updateLoanPeriod(type) {
 
         showAgeIneligibility(type, ageInfo.message, dob);
         return;
-    }
-
-    // Apun Bahan alert is ONLY for Salaried Individual and only for valid ages.
-    if (type === "s") {
-        const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-
-        if (sApunBahanAlert && ageInfo.age !== undefined) {
-            if (ageInfo.age <= 53) {
-                sApunBahanAlert.classList.add("show", "apun-bahan-eligible");
-                sApunBahanAlert.innerHTML = `
-                    ✓ APUN BAHAN SCHEME ALERT<br>
-                    Applicant is eligible for the Apun Bahan Scheme.
-                `;
-            } else if (ageInfo.age > 53 && ageInfo.age <= 60) {
-                sApunBahanAlert.classList.add("show");
-                sApunBahanAlert.classList.remove("apun-bahan-eligible");
-                sApunBahanAlert.innerHTML = `
-                    ⚠ APUN BAHAN SCHEME ALERT<br>
-                    Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
-                `;
-            } else {
-                sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
-            }
-        }
     }
 
     // Date of Joining is not applicable once the applicant's age is
@@ -2531,15 +2592,34 @@ function checkSalariedServicePeriod() {
     }
 }
 
+function getApunBahanLoanPeriodFromDob(dob) {
+
+    if (!dob) {
+        return { valid: false, message: "Please enter the customer's Date of Birth." };
+    }
+
+    const birthDate = new Date(dob + "T00:00:00");
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const birthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+    if (birthday > today) age--;
+
+    if (age < 21) {
+        return { valid:false, message:"Customer must be at least 21 years old for Apun Bahan Scheme." };
+    }
+
+    if (age >= 55) {
+        return { valid:false, message:"Customer is not eligible because maximum permissible age for Apun Bahan Scheme is 55 years." };
+    }
+
+    return { valid:true, age:age, maxMonths:60, message:"" };
+}
+
+
 function calculateSalaried() {
 
     hideError();
-
-    // Always reset the Apun Bahan alert before evaluating the current applicant.
-    const sApunBahanAlertReset = document.getElementById("sApunBahanAlert");
-    if (sApunBahanAlertReset) {
-        sApunBahanAlertReset.classList.remove("show", "apun-bahan-eligible");
-    }
 
     const dob = document.getElementById("sDob").value;
     const doj = document.getElementById("sDoj").value;
@@ -2553,7 +2633,7 @@ function calculateSalaried() {
     const emi5 = getNumber("sEmi5");
 
     const interestRate = getNumber("sInterestRate");
-    const ageInfo = getLoanPeriodFromDob(dob);
+    const ageInfo = currentLoanScheme === "apunBahan" ? getApunBahanLoanPeriodFromDob(dob) : getLoanPeriodFromDob(dob);
 
     if (!ageInfo.valid) {
 
@@ -2621,10 +2701,17 @@ function calculateSalaried() {
     const totalExistingEmi = emi1 + emi2 + emi3 + emi4 + emi5;
     const fortyPercent = grossSalary * 0.40;
 
-    // Preserve the existing rule: in-hand salary must be >= 40% of gross.
-    // Hence this is the maximum EMI available for the new car loan.
+    let minimumRequiredInHand = fortyPercent;
+
+    // Apun Bahan Scheme: after all deductions, existing EMIs and proposed loan EMI,
+    // the remaining in-hand salary should be at least ₹15,000 or 40% of gross salary,
+    // whichever is higher.
+    if (currentLoanScheme === "apunBahan") {
+        minimumRequiredInHand = Math.max(15000, fortyPercent);
+    }
+
     const maximumPermissibleEmi =
-        grossSalary - salaryDeduction - totalExistingEmi - fortyPercent;
+        grossSalary - salaryDeduction - totalExistingEmi - minimumRequiredInHand;
 
     const maxLoanEligibility = maximumPermissibleEmi > 0
         ? calculatePrincipalFromEMI(
@@ -2669,12 +2756,6 @@ function calculateSalaried() {
         if (ageInfo.age > 60) {
             pensionerRow.style.display = "flex";
             pensionerStatus.textContent = "PENSIONER";
-            // Pensioners must NEVER see the Apun Bahan alert.
-            const pensionerApunAlert = document.getElementById("sApunBahanAlert");
-            if (pensionerApunAlert) {
-                pensionerApunAlert.classList.remove("show");
-                pensionerApunAlert.style.display = "none";
-            }
             // Do not show superannuation date for pensioners.
             if (superannuationRow) superannuationRow.style.display = "none";
             // Period of Service is not shown for pensioners.
@@ -2729,29 +2810,6 @@ function calculateSalaried() {
         } else {
             sMinimumLoanPeriod.textContent = "Not Available";
             sMinimumPeriodEmi.textContent = "-";
-        }
-    }
-
-    // Apun Bahan alert applies ONLY to Salaried Individuals.
-    // Age 53 or below = eligible (green); above 53 through 60 = not eligible.
-    // Pensioners must never see it.
-    const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-    if (sApunBahanAlert) {
-        if (ageInfo.age <= 53) {
-            sApunBahanAlert.classList.add("show", "apun-bahan-eligible");
-            sApunBahanAlert.innerHTML = `
-                ✓ APUN BAHAN SCHEME ALERT<br>
-                Applicant is eligible for the Apun Bahan Scheme.
-            `;
-        } else if (ageInfo.age > 53 && ageInfo.age <= 60) {
-            sApunBahanAlert.classList.add("show");
-            sApunBahanAlert.classList.remove("apun-bahan-eligible");
-            sApunBahanAlert.innerHTML = `
-                ⚠ APUN BAHAN SCHEME ALERT<br>
-                Applicant is not eligible for the Apun Bahan Scheme because the age is above 53 years.
-            `;
-        } else {
-            sApunBahanAlert.classList.remove("show", "apun-bahan-eligible");
         }
     }
 
@@ -3035,16 +3093,16 @@ function calculateBusinessLoan() {
     document.getElementById("bNewLoanEmi").textContent =
         formatCurrency(maximumPermissibleEmi);
 
-    // Apun Bahan repayment period is 3 to 7 years.
+    // Minimum repayment period is 3 years (36 months).
     // Show the minimum 3-year option only when the customer's age-based
     // maximum period can accommodate the required minimum of 3 years.
-    const minimumApunBahanMonths = 36;
+    const minimumBusinessLoanMonths = 36;
     const minimumPeriodBox = document.getElementById("bMinimumPeriodBox");
     const minimumPeriodValue = document.getElementById("bMinimumLoanPeriod");
     const minimumPeriodEmiValue = document.getElementById("bMinimumPeriodEmi");
 
     if (minimumPeriodBox && minimumPeriodValue && minimumPeriodEmiValue) {
-        if (ageInfo.maxMonths >= minimumApunBahanMonths &&
+        if (ageInfo.maxMonths >= minimumBusinessLoanMonths &&
             maximumPermissibleEmi > 0 &&
             maxLoanEligibility > 0) {
 
@@ -3054,12 +3112,12 @@ function calculateBusinessLoan() {
             const minimumPeriodEmi = calculateEMI(
                 maxLoanEligibility,
                 interestRate,
-                minimumApunBahanMonths
+                minimumBusinessLoanMonths
             );
 
             minimumPeriodBox.style.display = "block";
             minimumPeriodValue.textContent =
-                formatLoanPeriod(minimumApunBahanMonths);
+                formatLoanPeriod(minimumBusinessLoanMonths);
             minimumPeriodEmiValue.textContent =
                 formatCurrency(minimumPeriodEmi);
         } else {
@@ -3124,21 +3182,24 @@ function goBackToApplicantSelection() {
 
     resetCalculator();
 
+    // Always hide all screens before showing the destination screen.
+    // This prevents multiple screens appearing together after back navigation.
+    document.querySelectorAll(".screen").forEach(function(screen){
+        screen.classList.remove("active");
+    });
 
-    document.getElementById(
-        "salariedScreen"
-    ).classList.remove("active");
+    // Apun Bahan does not have applicant type selection.
+    // Return directly to the loan scheme selection screen.
+    if (currentLoanScheme === "apunBahan") {
 
+        const apunRadio = document.getElementById("apunBahanScheme");
+        if (apunRadio) apunRadio.checked = false;
 
-    document.getElementById(
-        "businessIncomeScreen"
-    ).classList.remove("active");
+        document.getElementById("homeScreen")
+            .classList.add("active");
 
-
-    document.getElementById(
-        "businessLoanScreen"
-    ).classList.remove("active");
-
+        return;
+    }
 
     document.getElementById(
         "applicantScreen"
@@ -3275,8 +3336,6 @@ function resetCalculator() {
 
     const sMinimumPeriodBox = document.getElementById("sMinimumPeriodBox");
     if (sMinimumPeriodBox) sMinimumPeriodBox.style.display = "none";
-    const sApunBahanAlert = document.getElementById("sApunBahanAlert");
-    if (sApunBahanAlert) sApunBahanAlert.classList.remove("show");
     const resetBusinessMinimumPeriodBox = document.getElementById("bMinimumPeriodBox");
     if (resetBusinessMinimumPeriodBox) resetBusinessMinimumPeriodBox.style.display = "none";
 
@@ -3441,6 +3500,20 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
   });
 }
+
+
+// Prevent Android/browser back navigation from restoring a mixed screen state
+// (Home screen + Applicant screen together). Always keep only one screen active.
+window.addEventListener("pageshow", function () {
+    const activeScreens = document.querySelectorAll(".screen.active");
+    if (activeScreens.length > 1) {
+        activeScreens.forEach(function(screen){
+            screen.classList.remove("active");
+        });
+        const home = document.getElementById("homeScreen");
+        if (home) home.classList.add("active");
+    }
+});
 </script>
 </body>
 
